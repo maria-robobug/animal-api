@@ -9,8 +9,8 @@ import (
 const dogAPIKey = "09b9779d-8aea-4c93-8a55-973cefcfc69f"
 
 type DogInfo []struct {
-	ImageURL string  `json:"image"`
-	Breeds   []Breed `json:"breeds"`
+	Breeds []Breed `json:"breeds"`
+	URL    string  `json:"url"`
 }
 
 type Breed struct {
