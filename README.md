@@ -1,1 +1,1 @@
-## Golang API for retrieving dog facts
+## API for retrieving dog facts
