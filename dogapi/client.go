@@ -47,6 +47,7 @@ func (c *DogClient) GetRandomDogInfo() (DogInfo, error) {
 
 	dogInfo := DogInfo{}
 	json.NewDecoder(resp.Body).Decode(&dogInfo)
+	defer resp.Body.Close()
 
 	return dogInfo, err
 }

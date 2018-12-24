@@ -20,7 +20,5 @@ func main() {
 		log.Fatalf("could not connect to dog api:\n%s", err)
 	}
 
-	for _, v := range dogInfo {
-		fmt.Printf("%+v\n", v)
-	}
+	fmt.Printf("%+v\n", dogInfo[0])
 }
