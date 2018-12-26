@@ -13,12 +13,16 @@ func main() {
 	c := &http.Client{
 		Timeout: time.Second * 30,
 	}
-	dc := dogapi.NewDogClient(c)
+
+	dc, err := dogapi.NewDogClient(c)
+	if err != nil {
+		log.Fatalf("could not create dog client:\n%s", err)
+	}
 
 	dogInfo, err := dc.GetRandomDogInfo()
 	if err != nil {
 		log.Fatalf("could not connect to dog api:\n%s", err)
 	}
 
-	fmt.Printf("%+v\n", dogInfo[0])
+	fmt.Printf("%+v\n", dogInfo)
 }
