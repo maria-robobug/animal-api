@@ -28,26 +28,26 @@ type Measure struct {
 	Metric string `json:"metric"`
 }
 
-type DogApi struct {
+type DogClient struct {
 	BaseURL *url.URL
 	Client  *http.Client
 }
 
-func NewDogClient(httpClient *http.Client) (*DogApi, error) {
+func NewDogClient(httpClient *http.Client) (*DogClient, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}
 
-	return &DogApi{
+	return &DogClient{
 		BaseURL: &url.URL{Path: "https://api.thedogapi.com/v1"},
 		Client:  httpClient,
 	}, nil
 }
 
-func (api *DogApi) GetRandomDogInfo() ([]DogInfo, error) {
+func (cli *DogClient) GetRandomDogInfo() ([]DogInfo, error) {
 	const endpoint = "/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1"
 
-	resp, err := api.Client.Get(api.BaseURL.Path + endpoint)
+	resp, err := cli.Client.Get(cli.BaseURL.Path + endpoint)
 	if err != nil {
 		return []DogInfo{}, err
 	}

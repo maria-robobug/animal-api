@@ -89,8 +89,8 @@ func TestGetRandomDogInfo(t *testing.T) {
 		},
 	}
 
-	api := DogApi{&url.URL{Path: "http://dummy.com"}, c}
-	body, _ := api.GetRandomDogInfo()
+	cli := DogClient{&url.URL{Path: "http://dummy.com"}, c}
+	body, _ := cli.GetRandomDogInfo()
 
 	if reflect.DeepEqual(body, expected) != true {
 		t.Errorf("expected: %+v but got %+v", expected, body)
