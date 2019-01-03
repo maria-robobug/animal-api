@@ -15,13 +15,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	app = &api.Application{
-		Server:   &http.Server{},
-		InfoLog:  log.New(os.Stdin, "", 0),
-		ErrorLog: log.New(os.Stderr, "", 0),
-	}
-)
+func TestNewApplication(t *testing.T) {
+	infoLog := log.New(os.Stdin, "", 0)
+	errorLog := log.New(os.Stderr, "", 0)
+
+	// given
+	mockClient := new(testutils.MockDogApi)
+
+	// when
+	app := api.New(mockClient, ":9000", infoLog, errorLog)
+
+	// then
+	assert.NotNil(t, app)
+}
 
 func TestGetRandomDog_Valid(t *testing.T) {
 	// initialise mocks and data
@@ -35,7 +41,12 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	}
 	mockClient := new(testutils.MockDogApi)
 	mockClient.On("GetRandomDogInfo").Return(nil)
-	app.Client = mockClient
+	app := &api.Application{
+		Client:   mockClient,
+		Server:   &http.Server{},
+		InfoLog:  log.New(os.Stdin, "", 0),
+		ErrorLog: log.New(os.Stderr, "", 0),
+	}
 
 	// given
 	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
@@ -59,7 +70,12 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 	// initialise mocks and data
 	mockClient := new(testutils.MockDogApi)
 	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
-	app.Client = mockClient
+	app := &api.Application{
+		Client:   mockClient,
+		Server:   &http.Server{},
+		InfoLog:  log.New(os.Stdin, "", 0),
+		ErrorLog: log.New(os.Stderr, "", 0),
+	}
 
 	// given
 	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
