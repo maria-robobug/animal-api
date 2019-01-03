@@ -40,14 +40,14 @@ const (
 func TestNewClient(t *testing.T) {
 	_, err := dog.NewClient("", &http.Client{})
 
-	assert.Equal(t, err, nil)
+	assert.Nil(t, err)
 }
 
 func TestInvalidClient(t *testing.T) {
 	invalidClientError := "invalid client: nil client provided"
 	_, err := dog.NewClient("", nil)
 
-	assert.NotEqual(t, err, nil)
+	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), invalidClientError)
 }
 
