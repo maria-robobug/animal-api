@@ -3,9 +3,9 @@ BINARY_NAME=dogfacts
 
 all: deps build
 install:
-	go install cmd/dogfacts/*.go
+	go install cmd/dogfacts/main.go
 build:
-	go build -o dogfacts cmd/dogfacts/*.go
+	go build -o dogfacts cmd/dogfacts/main.go
 test:
 	go test -v ./...
 clean:
