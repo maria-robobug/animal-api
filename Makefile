@@ -9,7 +9,6 @@ build:
 test:
 	go test -v ./...
 clean:
-	go clean
 	rm -f ./$(BINARY_NAME)
 deps:
 	go build -v ./...

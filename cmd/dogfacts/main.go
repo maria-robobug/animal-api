@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/maria-robobug/dogfacts/dogapi"
+	"github.com/maria-robobug/dogfacts/pkg/dogapi"
 )
 
 type application struct {
@@ -23,7 +23,7 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	client, err := dogapi.NewDogClient(&http.Client{Timeout: time.Second * 30})
+	client, err := dogapi.NewDogClient("https://api.thedogapi.com/v1", &http.Client{Timeout: time.Second * 30})
 	if err != nil {
 		errorLog.Fatalf("could not create dog client:\n%s", err)
 	}

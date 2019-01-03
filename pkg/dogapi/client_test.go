@@ -1,34 +1,20 @@
 package dogapi
 
 import (
-	"bytes"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/maria-robobug/dogfacts/pkg/utils"
 )
-
-// RoundTripFunc .
-type RoundTripFunc func(*http.Request) *http.Response
-
-// RoundTrip .
-func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req), nil
-}
-
-func NewTestClient(fn RoundTripFunc) *http.Client {
-	return &http.Client{
-		Transport: RoundTripFunc(fn),
-	}
-}
 
 func TestNewDogClient(t *testing.T) {
 	c := &http.Client{
 		Timeout: time.Second * 5,
 	}
-	_, err := NewDogClient(c)
+	_, err := NewDogClient("", c)
 
 	if err != nil {
 		t.Error("expected client to create successfully")
@@ -36,7 +22,7 @@ func TestNewDogClient(t *testing.T) {
 }
 
 func TestInvalidDogClient(t *testing.T) {
-	_, err := NewDogClient(nil)
+	_, err := NewDogClient("", nil)
 
 	if err == nil {
 		t.Error("expected error for invalid client")
@@ -48,7 +34,7 @@ func TestInvalidDogClient(t *testing.T) {
 }
 
 func TestGetRandomDogInfo(t *testing.T) {
-	c := mockClient(`[
+	c := utils.MockClient(200, `[
 		{
 			"breeds": [
 				{
@@ -95,16 +81,4 @@ func TestGetRandomDogInfo(t *testing.T) {
 	if reflect.DeepEqual(body, expected) != true {
 		t.Errorf("expected: %+v but got %+v", expected, body)
 	}
-}
-
-func mockClient(body string) (client *http.Client) {
-	client = NewTestClient(func(req *http.Request) *http.Response {
-		return &http.Response{
-			StatusCode: http.StatusOK,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(body)),
-			Header:     make(http.Header),
-		}
-	})
-
-	return client
 }

@@ -33,13 +33,13 @@ type DogClient struct {
 	Client  *http.Client
 }
 
-func NewDogClient(httpClient *http.Client) (*DogClient, error) {
+func NewDogClient(basePath string, httpClient *http.Client) (*DogClient, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}
 
 	return &DogClient{
-		BaseURL: &url.URL{Path: "https://api.thedogapi.com/v1"},
+		BaseURL: &url.URL{Path: basePath},
 		Client:  httpClient,
 	}, nil
 }
