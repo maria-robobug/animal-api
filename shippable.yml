@@ -1,0 +1,18 @@
+language: go
+
+go:
+  - 1.11
+
+env:
+  global:
+    - HEROKU_APP_NAME=animal-api
+    - secure: "YHTwlcLaaSVRnsfEPzX0Zgvf9nvPm04Z2MPbPaOtsi90e8AD/qHtRHqHIElHxpKzS2K+F5tMp4QqBDKBZdke1yh8fF9NE8ZMtEJ4wm4kWbUQTIjzJeVwyuToZ0A8w7c2JHyqXglLAuuBfznRkjWiIe6jg4vjU2CUnoJQsu2IM6KdK3Q/1BsjTx5F/GLAr2SEUsujRoP99MBhKl8IcrGj6lumZUCjjvi9ainBQ4JVkHW8w2+hhjoKF4rScNjji0HJ++PnD3Mp7jzo3dTYU9M5EUzpSdb8UHVmRGmScj5YJJu1EZyeBqsREkeRihjHtgMkGgM2FgRw2nvQF+a/M1vHVg=="
+
+build:
+  ci:
+    - make test
+    - make
+
+  on_success:
+    - make tag
+    - git push -f git@heroku.com:$HEROKU_APP_NAME.git master
