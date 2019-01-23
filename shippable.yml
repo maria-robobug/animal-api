@@ -15,4 +15,4 @@ build:
 
   on_success:
     - make tag
-    - git push -f git@heroku.com:$HEROKU_APP_NAME.git master
+    - git push -f git@heroku.com:$(HEROKU_APP_NAME).git master

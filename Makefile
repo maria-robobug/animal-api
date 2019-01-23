@@ -25,10 +25,6 @@ test:
 	go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out -o coverage.html
 	rm -f coverage.out
 
-tag:
-	git tag -a $(VERSION) -m "new release candidate"
-	git push origin $(VERSION)
-
 clean:
 	rm -fr bin
 	rm -f coverage.html
