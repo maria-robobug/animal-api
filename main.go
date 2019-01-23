@@ -1,14 +1,13 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/maria-robobug/dogfacts/server"
-	"github.com/maria-robobug/dogfacts/server/client"
+	"github.com/maria-robobug/animal-api/server"
+	"github.com/maria-robobug/animal-api/server/client"
 )
 
 const (
@@ -16,8 +15,10 @@ const (
 )
 
 func main() {
-	addr := flag.String("addr", ":8080", "HTTP network address")
-	flag.Parse()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -29,7 +30,7 @@ func main() {
 
 	cnfg := &server.Config{
 		Client:   client,
-		Addr:     *addr,
+		Addr:     ":" + port,
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
 	}

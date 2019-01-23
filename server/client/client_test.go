@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/maria-robobug/dogfacts/server/client"
-	"github.com/maria-robobug/dogfacts/server/testutils"
+	"github.com/maria-robobug/animal-api/server/client"
+	"github.com/maria-robobug/animal-api/server/testutils"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/maria-robobug/dogfacts/server/client"
+	"github.com/maria-robobug/animal-api/server/client"
 	"github.com/stretchr/testify/mock"
 )
 
