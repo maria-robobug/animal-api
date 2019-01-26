@@ -1,4 +1,7 @@
 steps:
+- name: "gcr.io/cloud-builders/go"
+  args: ["test", "-coverprofile=coverage.out", "./..."]
+  env: ["PROJECT_ROOT=https://github.com/maria-robobug/animal-api", "GO111MODULE=on"]
 - name: "gcr.io/cloud-builders/gcloud"
-  args: ["app", "deploy"]
+  args: ["app", "deploy", "./app.yaml"]
 timeout: "1600s"
