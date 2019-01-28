@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/maria-robobug/animal-api/server"
-	"github.com/maria-robobug/animal-api/server/testutils"
+	"github.com/maria-robobug/animal-api/testutils"
 	"github.com/stretchr/testify/assert"
 )
 

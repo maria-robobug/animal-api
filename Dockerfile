@@ -1,34 +1,36 @@
 #################################
 # STEP 1 setup env
 #################################
-FROM alpine as builder
+FROM golang:1.11.1-alpine3.8 as builder
 
-# Ca-certificates is required to call HTTPS endpoints.
-RUN apk update && apk add --no-cache ca-certificates tzdata && update-ca-certificates
+RUN apk add --update --no-cache git ca-certificates
 
-# Create appuser
-RUN adduser -D -g '' appuser
+ENV GO111MODULE=on \
+  CGO_ENABLED=0 \
+  GOOS=linux \
+  GOARCH=amd64
 
+WORKDIR /app
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
+COPY . .
+
+RUN go test -v ./...
+RUN go build -o animal-api
 
 #############################
 # STEP 2 build a small image
 #############################
 FROM scratch
 
-# Import from builder.
-COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-
-# Import the user and group files from the builder.
-COPY --from=builder /etc/passwd /etc/passwd
-
-WORKDIR /go/src/app
-COPY  bin/animal-api animal-api
-
-# Use an unprivileged user.
-USER appuser
+# Import files from the builder.
+COPY --from=builder /app/animal-api /app/
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 EXPOSE 8080
 
-# Run the binary
-CMD ["./animal-api"]
+ENTRYPOINT [ "/app/animal-api" ]

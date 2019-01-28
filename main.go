@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/maria-robobug/animal-api/client"
 	"github.com/maria-robobug/animal-api/server"
-	"github.com/maria-robobug/animal-api/server/client"
 )
 
 const (

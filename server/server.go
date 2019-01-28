@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/maria-robobug/animal-api/server/client"
+	"github.com/maria-robobug/animal-api/client"
 )
 
 var (
