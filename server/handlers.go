@@ -31,8 +31,8 @@ func (s *Server) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 	resp := &Response{
 		ImageURL:    dogImage,
 		Name:        dog.Name,
-		Height:      dog.Height.Metric,
-		Weight:      dog.Weight.Metric,
+		Height:      dog.Height.Metric + " cm",
+		Weight:      dog.Weight.Metric + " kgs",
 		Lifespan:    dog.LifeSpan,
 		Temperament: dog.Temperament,
 	}

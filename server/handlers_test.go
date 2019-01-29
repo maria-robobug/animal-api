@@ -20,7 +20,7 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	expected := &server.Response{
 		ImageURL:    "https://somecdn.com/images/blah.jpg",
 		Name:        "Boston Terrier",
-		Height:      "41 - 43 cm at the withers",
+		Height:      "41 - 43 cm",
 		Weight:      "5 - 11 kgs",
 		Lifespan:    "11 - 13 years",
 		Temperament: "Friendly, Lively, Intelligent",

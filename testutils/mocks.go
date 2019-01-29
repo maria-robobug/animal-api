@@ -19,16 +19,16 @@ var defaultResp = []byte(`[
           "bred_for": "Ratting, Companionship",
           "breed_group": "Non-Sporting",
           "height": {
-            "imperial": "16 - 17 inches at the withers",
-            "metric": "41 - 43 cm at the withers"
+            "imperial": "16 - 17",
+            "metric": "41 - 43"
           },
           "id": 53,
           "life_span": "11 - 13 years",
           "name": "Boston Terrier",
           "temperament": "Friendly, Lively, Intelligent",
           "weight": {
-            "imperial": "10 - 25 lbs",
-            "metric": "5 - 11 kgs"
+            "imperial": "10 - 25",
+            "metric": "5 - 11"
           }
         }
       ],
