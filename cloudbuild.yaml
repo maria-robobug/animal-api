@@ -11,4 +11,9 @@ steps:
         "--image-url",
         "gcr.io/$PROJECT_ID/animal-api-img:$REVISION_ID",
       ]
+    secretEnv: ["DOG_API_KEY"]
 timeout: "1600s"
+secrets:
+  - kmsKeyName: projects/$PROJECT_ID/locations/global/keyRings/ANIMAL_KEYRING/cryptoKeys/ANIMAL_KEY
+    secretEnv:
+      DOG_API_KEY: CiQAfPwswo1eYUPRocVQ6P5lXDXy+dBfWLo/N6M85XVKg6Zagj0STQDm+mqhk4rrREHyxhryNsAFE7fGMwC67WQ7C5DzCHfMqo/BU52PdFlfTqDrCpEVy/nAhMKoyeFan8eNbHrQtlIaxOb8pQrjkIEMJQVd
