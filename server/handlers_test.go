@@ -24,6 +24,7 @@ func TestGetRandomDog_Valid(t *testing.T) {
 		Weight:      "5 - 11 kgs",
 		Lifespan:    "11 - 13 years",
 		Temperament: "Friendly, Lively, Intelligent",
+		BreedGroup:  "Non-Sporting",
 	}
 	mockClient := new(testutils.MockDogAPI)
 	mockClient.On("GetRandomDogInfo").Return(nil)

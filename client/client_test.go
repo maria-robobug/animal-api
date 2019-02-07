@@ -38,14 +38,14 @@ const (
 )
 
 func TestNewClient(t *testing.T) {
-	_, err := client.New("", &http.Client{})
+	_, err := client.New("", "", &http.Client{})
 
 	assert.Nil(t, err)
 }
 
 func TestInvalidClient(t *testing.T) {
 	invalidClientError := "invalid client: nil client provided"
-	_, err := client.New("", nil)
+	_, err := client.New("", "", nil)
 
 	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), invalidClientError)
@@ -59,10 +59,11 @@ func TestGetRandomDogInfo(t *testing.T) {
 		{
 			Breeds: []client.Breed{
 				client.Breed{
+					"Boston Terrier",
 					client.Measure{Metric: "41 - 43 cm at the withers"},
 					client.Measure{Metric: "5 - 11 kgs"},
+					"Non-Sporting",
 					"11 - 13 years",
-					"Boston Terrier",
 					"Friendly, Lively, Intelligent",
 				},
 			},
@@ -70,7 +71,7 @@ func TestGetRandomDogInfo(t *testing.T) {
 		},
 	}
 
-	cli, _ := client.New("http://test.com", httpClient)
+	cli, _ := client.New("http://test.com", "1234", httpClient)
 	body, _ := cli.GetRandomDogInfo()
 
 	assert.Equal(t, body, expected)

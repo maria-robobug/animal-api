@@ -22,9 +22,10 @@ var defaultResp = []byte(`[
             "imperial": "16 - 17",
             "metric": "41 - 43"
           },
-          "id": 53,
+					"id": 53,
+					"name": "Boston Terrier",
+					"breed_group": "Non-Sporting",
           "life_span": "11 - 13 years",
-          "name": "Boston Terrier",
           "temperament": "Friendly, Lively, Intelligent",
           "weight": {
             "imperial": "10 - 25",

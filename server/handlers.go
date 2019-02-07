@@ -12,6 +12,7 @@ type Response struct {
 	Weight      string `json:"weight"`
 	Lifespan    string `json:"lifespan"`
 	Temperament string `json:"temperament"`
+	BreedGroup  string `json:"breed_group"`
 }
 
 func (s *Server) GetRandomDog(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +36,7 @@ func (s *Server) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		Weight:      dog.Weight.Metric + " kgs",
 		Lifespan:    dog.LifeSpan,
 		Temperament: dog.Temperament,
+		BreedGroup:  dog.BreedGroup,
 	}
 
 	json.NewEncoder(w).Encode(resp)
