@@ -6,8 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/maria-robobug/animal-api/client"
-	"github.com/maria-robobug/animal-api/server"
+	"github.com/maria-robobug/animal-api/pkg/http/rest"
 )
 
 const (
@@ -31,7 +30,7 @@ func main() {
 		errorLog.Fatalf("config error: please provide DOG_API_KEY")
 	}
 
-	client, err := client.New(dogapiBaseURL, apiKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
+	client, err := rest.NewClient(dogapiBaseURL, apiKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
 	if err != nil {
 		errorLog.Fatalf("could not create dog client: %s", err)
 	}
@@ -42,14 +41,14 @@ func main() {
 		port = "8080"
 	}
 
-	cnfg := &server.Config{
+	cnfg := &rest.Config{
 		Client:   client,
 		Addr:     ":" + port,
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
 	}
 
-	serv, err := server.New(cnfg)
+	serv, err := rest.NewServer(cnfg)
 	if err != nil {
 		errorLog.Fatalf("could not initialise server: %s", err)
 	}

@@ -1,4 +1,4 @@
-package testutils
+package mock
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/maria-robobug/animal-api/client"
+	"github.com/maria-robobug/animal-api/pkg/http/rest"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -39,14 +39,16 @@ var defaultResp = []byte(`[
     }
   ]`)
 
-type MockDogAPI struct {
+// DogAPI mocks the api
+type DogAPI struct {
 	mock.Mock
 }
 
-func (m *MockDogAPI) GetRandomDogInfo() ([]client.DogInfo, error) {
+// GetRandomDogInfo mocks the method to get a random dog
+func (m *DogAPI) GetRandomDogInfo() ([]rest.DogInfo, error) {
 	args := m.Mock.Called()
 
-	d := []client.DogInfo{}
+	d := []rest.DogInfo{}
 	err := json.Unmarshal(defaultResp, &d)
 	if err != nil {
 		return d, err
@@ -55,6 +57,7 @@ func (m *MockDogAPI) GetRandomDogInfo() ([]client.DogInfo, error) {
 	return d, args.Error(0)
 }
 
+// TestingHTTPClient mocks the http client
 func TestingHTTPClient(handler http.Handler) (*http.Client, func()) {
 	s := httptest.NewServer(handler)
 

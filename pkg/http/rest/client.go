@@ -1,4 +1,4 @@
-package client
+package rest
 
 import (
 	"encoding/json"
@@ -38,7 +38,7 @@ type Client struct {
 	Client  *http.Client
 }
 
-func New(baseURL, apiKey string, httpClient *http.Client) (*Client, error) {
+func NewClient(baseURL, apiKey string, httpClient *http.Client) (*Client, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}

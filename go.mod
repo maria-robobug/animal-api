@@ -1,7 +1,8 @@
 module github.com/maria-robobug/animal-api
 
+go 1.12
+
 require (
-	github.com/gorilla/context v1.1.1 // indirect
-	github.com/gorilla/mux v1.6.2
+	github.com/gorilla/mux v1.7.0
 	github.com/stretchr/testify v1.3.0
 )

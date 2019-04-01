@@ -1,4 +1,4 @@
-package server
+package rest
 
 import (
 	"errors"
@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/maria-robobug/animal-api/client"
 )
 
 var (
@@ -16,18 +15,18 @@ var (
 )
 
 type Server struct {
-	Client            client.DogAPI
+	Client            DogAPI
 	Server            *http.Server
 	InfoLog, ErrorLog *log.Logger
 }
 
 type Config struct {
-	Client            client.DogAPI
+	Client            DogAPI
 	Addr              string
 	InfoLog, ErrorLog *log.Logger
 }
 
-func New(cnfg *Config) (*Server, error) {
+func NewServer(cnfg *Config) (*Server, error) {
 	if cnfg.Client == nil {
 		return &Server{}, errConfigNilClient
 	}

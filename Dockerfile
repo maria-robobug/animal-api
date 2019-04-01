@@ -1,7 +1,7 @@
 #################################
 # STEP 1 setup env
 #################################
-FROM golang:1.11.1-alpine3.8 as builder
+FROM golang:1.12.1-alpine3.9 as builder
 
 RUN apk add --update --no-cache git ca-certificates
 
