@@ -5,18 +5,20 @@ import (
 	"os"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/server"
-	"github.com/maria-robobug/animal-api/testutils"
+	"github.com/maria-robobug/animal-api/pkg/http/rest"
+
+	"github.com/maria-robobug/animal-api/pkg/mock"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewServer_ValidConfig(t *testing.T) {
 	infoLog := log.New(os.Stdin, "", 0)
 	errorLog := log.New(os.Stderr, "", 0)
-	mockClient := new(testutils.MockDogAPI)
+	mockClient := new(mock.DogAPI)
 
 	// given
-	cnfg := &server.Config{
+	cnfg := &rest.Config{
 		Client:   mockClient,
 		Addr:     ":9000",
 		InfoLog:  infoLog,
@@ -24,7 +26,7 @@ func TestNewServer_ValidConfig(t *testing.T) {
 	}
 
 	// when
-	serv, err := server.New(cnfg)
+	serv, err := rest.NewServer(cnfg)
 
 	// then
 	assert.Nil(t, err, "error is not nil")
@@ -34,10 +36,10 @@ func TestNewServer_ValidConfig(t *testing.T) {
 }
 func TestNewServer_MissingClient(t *testing.T) {
 	// given
-	cnfg := &server.Config{}
+	cnfg := &rest.Config{}
 
 	// when
-	_, err := server.New(cnfg)
+	_, err := rest.NewServer(cnfg)
 
 	// then
 	assert.NotNil(t, err, "error is nil")
@@ -45,13 +47,13 @@ func TestNewServer_MissingClient(t *testing.T) {
 }
 
 func TestNewServer_MissingAddrPort(t *testing.T) {
-	mockClient := new(testutils.MockDogAPI)
+	mockClient := new(mock.DogAPI)
 
 	// given
-	cnfg := &server.Config{Client: mockClient}
+	cnfg := &rest.Config{Client: mockClient}
 
 	// when
-	_, err := server.New(cnfg)
+	_, err := rest.NewServer(cnfg)
 
 	// then
 	assert.NotNil(t, err, "error is nil")
@@ -59,13 +61,13 @@ func TestNewServer_MissingAddrPort(t *testing.T) {
 }
 
 func TestNewServer_MissingLogger(t *testing.T) {
-	mockClient := new(testutils.MockDogAPI)
+	mockClient := new(mock.DogAPI)
 
 	// given
-	cnfg := &server.Config{Client: mockClient, Addr: ":8000"}
+	cnfg := &rest.Config{Client: mockClient, Addr: ":8000"}
 
 	// when
-	_, err := server.New(cnfg)
+	_, err := rest.NewServer(cnfg)
 
 	// then
 	assert.NotNil(t, err, "error is nil")

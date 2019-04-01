@@ -10,14 +10,15 @@ import (
 	"os"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/server"
-	"github.com/maria-robobug/animal-api/testutils"
+	"github.com/maria-robobug/animal-api/pkg/mock"
+
+	"github.com/maria-robobug/animal-api/pkg/http/rest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetRandomDog_Valid(t *testing.T) {
 	// initialise mocks and data
-	expected := &server.Response{
+	expected := &rest.Response{
 		ImageURL:    "https://somecdn.com/images/blah.jpg",
 		Name:        "Boston Terrier",
 		Height:      "41 - 43 cm",
@@ -26,9 +27,9 @@ func TestGetRandomDog_Valid(t *testing.T) {
 		Temperament: "Friendly, Lively, Intelligent",
 		BreedGroup:  "Non-Sporting",
 	}
-	mockClient := new(testutils.MockDogAPI)
+	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(nil)
-	serv := &server.Server{
+	serv := &rest.Server{
 		Client:   mockClient,
 		Server:   &http.Server{},
 		InfoLog:  log.New(os.Stdin, "", 0),
@@ -42,7 +43,7 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	// when
 	testHandler.ServeHTTP(rr, r)
 
-	body := &server.Response{}
+	body := &rest.Response{}
 	err := json.Unmarshal(rr.Body.Bytes(), body)
 	if err != nil {
 		t.Errorf("unable to read response: %s", err)
@@ -55,9 +56,9 @@ func TestGetRandomDog_Valid(t *testing.T) {
 
 func TestGetRandomDog_InternalServerError(t *testing.T) {
 	// initialise mocks and data
-	mockClient := new(testutils.MockDogAPI)
+	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
-	serv := &server.Server{
+	serv := &rest.Server{
 		Client:   mockClient,
 		Server:   &http.Server{},
 		InfoLog:  log.New(os.Stdin, "", 0),
