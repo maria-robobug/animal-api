@@ -10,6 +10,10 @@ var (
 	errInvalidClient = errors.New("invalid client: nil client provided")
 )
 
+type DogAPI interface {
+	GetRandomDogInfo() ([]DogInfo, error)
+}
+
 type DogInfo struct {
 	Breeds []Breed `json:"breeds"`
 	URL    string  `json:"url"`
@@ -26,10 +30,6 @@ type Breed struct {
 
 type Measure struct {
 	Metric string `json:"metric"`
-}
-
-type DogAPI interface {
-	GetRandomDogInfo() ([]DogInfo, error)
 }
 
 type Client struct {

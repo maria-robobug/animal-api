@@ -15,7 +15,7 @@ type Response struct {
 	BreedGroup  string `json:"breed_group"`
 }
 
-func (s *Server) GetRandomDog(w http.ResponseWriter, r *http.Request) {
+func (s *Service) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 	dogInfo, err := s.Client.GetRandomDogInfo()
 	if err != nil {
 		s.ErrorLog.Printf("%s", err.Error())

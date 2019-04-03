@@ -27,9 +27,11 @@ func TestGetRandomDog_Valid(t *testing.T) {
 		Temperament: "Friendly, Lively, Intelligent",
 		BreedGroup:  "Non-Sporting",
 	}
+
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(nil)
-	serv := &rest.Server{
+
+	serv := &rest.Service{
 		Client:   mockClient,
 		Server:   &http.Server{},
 		InfoLog:  log.New(os.Stdin, "", 0),
@@ -58,7 +60,7 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 	// initialise mocks and data
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
-	serv := &rest.Server{
+	serv := &rest.Service{
 		Client:   mockClient,
 		Server:   &http.Server{},
 		InfoLog:  log.New(os.Stdin, "", 0),
