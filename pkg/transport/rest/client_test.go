@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/pkg/http/rest"
 	"github.com/maria-robobug/animal-api/pkg/mock"
+	"github.com/maria-robobug/animal-api/pkg/transport/rest"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -74,7 +74,7 @@ func TestGetRandomDogInfo(t *testing.T) {
 	cli, _ := rest.NewClient("http://test.com", "1234", httpClient)
 	body, _ := cli.GetRandomDogInfo()
 
-	assert.Equal(t, body, expected)
+	assert.Equal(t, expected, body)
 }
 
 func createTestClient(resp []byte) (client *http.Client, teardown func()) {

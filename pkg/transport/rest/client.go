@@ -66,7 +66,7 @@ func (c *Client) GetRandomDogInfo() ([]DogInfo, error) {
 	defer resp.Body.Close()
 
 	dogInfo := []DogInfo{}
-	json.NewDecoder(resp.Body).Decode(&dogInfo)
+	err = json.NewDecoder(resp.Body).Decode(&dogInfo)
 
 	return dogInfo, err
 }

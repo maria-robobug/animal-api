@@ -39,5 +39,11 @@ func (s *Server) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		BreedGroup:  dog.BreedGroup,
 	}
 
-	json.NewEncoder(w).Encode(resp)
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		s.ErrorLog.Printf("%s", err.Error())
+
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 }
