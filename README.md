@@ -1,1 +1,1 @@
-## API for retrieving dog facts
+## API for retrieving animal facts
