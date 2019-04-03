@@ -12,7 +12,7 @@ import (
 
 	"github.com/maria-robobug/animal-api/pkg/mock"
 
-	"github.com/maria-robobug/animal-api/pkg/transport/rest"
+	"github.com/maria-robobug/animal-api/pkg/dog/rest"
 	"github.com/stretchr/testify/assert"
 )
 
