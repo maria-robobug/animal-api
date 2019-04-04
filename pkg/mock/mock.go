@@ -1,18 +1,13 @@
 package mock
 
 import (
-	"context"
-	"crypto/tls"
 	"encoding/json"
-	"net"
-	"net/http"
-	"net/http/httptest"
 
-	"github.com/maria-robobug/animal-api/pkg/http/rest"
+	"github.com/maria-robobug/animal-api/pkg/dog/rest"
 	"github.com/stretchr/testify/mock"
 )
 
-var defaultResp = []byte(`[
+var defaultResp = `[
     {
       "breeds": [
         {
@@ -37,7 +32,7 @@ var defaultResp = []byte(`[
       "id": "rkZRggqVX",
       "url": "https://somecdn.com/images/blah.jpg"
     }
-  ]`)
+  ]`
 
 // DogAPI mocks the api
 type DogAPI struct {
@@ -49,28 +44,10 @@ func (m *DogAPI) GetRandomDogInfo() ([]rest.DogInfo, error) {
 	args := m.Mock.Called()
 
 	d := []rest.DogInfo{}
-	err := json.Unmarshal(defaultResp, &d)
+	err := json.Unmarshal([]byte(defaultResp), &d)
 	if err != nil {
 		return d, err
 	}
 
 	return d, args.Error(0)
-}
-
-// TestingHTTPClient mocks the http client
-func TestingHTTPClient(handler http.Handler) (*http.Client, func()) {
-	s := httptest.NewServer(handler)
-
-	cli := &http.Client{
-		Transport: &http.Transport{
-			DialContext: func(_ context.Context, network, _ string) (net.Conn, error) {
-				return net.Dial(network, s.Listener.Addr().String())
-			},
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
-
-	return cli, s.Close
 }

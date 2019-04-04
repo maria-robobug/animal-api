@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/pkg/http/rest"
+	"github.com/maria-robobug/animal-api/pkg/dog/rest"
 
 	"github.com/maria-robobug/animal-api/pkg/mock"
 

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/maria-robobug/animal-api/pkg/http/rest"
+	"github.com/maria-robobug/animal-api/pkg/dog/rest"
 )
 
 const (

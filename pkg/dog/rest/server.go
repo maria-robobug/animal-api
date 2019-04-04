@@ -14,32 +14,41 @@ var (
 	errLoggerMissing     = errors.New("invalid config: logger missing")
 )
 
-type Server struct {
+// Server interface
+type Server interface {
+	NewServer(cnfg *Config) (*Server, error)
+	GetRandomDog(w http.ResponseWriter, r *http.Request)
+}
+
+// Service holds service client and server information
+type Service struct {
 	Client            DogAPI
 	Server            *http.Server
 	InfoLog, ErrorLog *log.Logger
 }
 
+// Config holds service config information
 type Config struct {
 	Client            DogAPI
 	Addr              string
 	InfoLog, ErrorLog *log.Logger
 }
 
-func NewServer(cnfg *Config) (*Server, error) {
+// NewServer returns a new service
+func NewServer(cnfg *Config) (*Service, error) {
 	if cnfg.Client == nil {
-		return &Server{}, errConfigNilClient
+		return &Service{}, errConfigNilClient
 	}
 
 	if cnfg.Addr == "" {
-		return &Server{}, errConfigMissingPort
+		return &Service{}, errConfigMissingPort
 	}
 
 	if cnfg.InfoLog == nil || cnfg.ErrorLog == nil {
-		return &Server{}, errLoggerMissing
+		return &Service{}, errLoggerMissing
 	}
 
-	return &Server{
+	return &Service{
 		Client: cnfg.Client,
 		Server: &http.Server{
 			Addr:     cnfg.Addr,
@@ -50,14 +59,15 @@ func NewServer(cnfg *Config) (*Server, error) {
 	}, nil
 }
 
-func (s *Server) Run() error {
+// Run starts the server
+func (s *Service) Run() error {
 	s.registerRoutes()
 
 	s.InfoLog.Printf("Starting server on %s", s.Server.Addr)
 	return s.Server.ListenAndServe()
 }
 
-func (s *Server) registerRoutes() {
+func (s *Service) registerRoutes() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/v1/dog", s.GetRandomDog)
 	s.Server.Handler = r
