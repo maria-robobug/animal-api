@@ -1,10 +1,10 @@
-package rest_test
+package dog_test
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/pkg/dog/rest"
+	"github.com/maria-robobug/animal-api/internal/rest/dog"
 	"github.com/stretchr/testify/assert"
 )
 

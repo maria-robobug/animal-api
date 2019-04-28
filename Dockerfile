@@ -12,14 +12,9 @@ ENV GO111MODULE=on \
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
-
-RUN go mod download
-
 COPY . .
 
-RUN go test -v ./...
+RUN go mod download
 RUN go build -o animal-api
 
 #############################

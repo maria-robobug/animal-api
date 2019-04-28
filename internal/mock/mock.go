@@ -3,7 +3,7 @@ package mock
 import (
 	"encoding/json"
 
-	"github.com/maria-robobug/animal-api/pkg/dog/rest"
+	"github.com/maria-robobug/animal-api/internal/rest/dog"
 	"github.com/stretchr/testify/mock"
 )
 

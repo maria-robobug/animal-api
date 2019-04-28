@@ -1,4 +1,4 @@
-package rest
+package dog
 
 import (
 	"encoding/json"

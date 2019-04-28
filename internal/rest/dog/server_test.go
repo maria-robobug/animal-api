@@ -1,13 +1,13 @@
-package rest_test
+package dog_test
 
 import (
 	"log"
 	"os"
 	"testing"
 
-	"github.com/maria-robobug/animal-api/pkg/dog/rest"
+	"github.com/maria-robobug/animal-api/internal/rest/dog"
 
-	"github.com/maria-robobug/animal-api/pkg/mock"
+	"github.com/maria-robobug/animal-api/internal/mock"
 
 	"github.com/stretchr/testify/assert"
 )
