@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/maria-robobug/animal-api/internal/client"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
 
-	"github.com/gorilla/mux"
+	"github.com/maria-robobug/animal-api/internal/client"
 )
 
 var (
@@ -70,7 +72,24 @@ func (s *AnimalAPIServer) Run() error {
 }
 
 func (s *AnimalAPIServer) registerRoutes() {
-	r := mux.NewRouter()
-	r.HandleFunc("/api/v1/dogs", s.GetRandomDog)
+	r := chi.NewRouter()
+	r.Use(
+		render.SetContentType(render.ContentTypeJSON),
+		middleware.Logger,
+		middleware.DefaultCompress,
+		middleware.RedirectSlashes,
+		middleware.Recoverer,
+	)
+
+	r.Get("/api/v1/dogs", s.GetRandomDog)
+
+	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		s.InfoLog.Printf("-> %s %s\n", method, route)
+		return nil
+	}
+	if err := chi.Walk(r, walkFunc); err != nil {
+		s.ErrorLog.Panicf("Logging err: %s\n", err.Error())
+	}
+
 	s.Server.Handler = r
 }

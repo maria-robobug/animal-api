@@ -1,8 +1,9 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
+
+	"github.com/go-chi/render"
 )
 
 // Response contains the http response body data
@@ -18,8 +19,6 @@ type Response struct {
 
 // GetRandomDog returns random dog data from the DogAPI
 func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
 	dogInfo, err := s.DogAPIClient.GetRandomDogInfo()
 	if err != nil {
 		s.ErrorLog.Printf("%s", err.Error())
@@ -40,11 +39,5 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		BreedGroup:  dog.BreedGroup,
 	}
 
-	err = json.NewEncoder(w).Encode(resp)
-	if err != nil {
-		s.ErrorLog.Printf("%s", err.Error())
-
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	render.JSON(w, r, resp)
 }
