@@ -46,7 +46,9 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	// when
 	testHandler.ServeHTTP(rr, r)
 	body := &server.Response{}
-	json.Unmarshal(rr.Body.Bytes(), body)
+	if err := json.Unmarshal(rr.Body.Bytes(), body); err != nil {
+		t.Errorf("unable to read response: %s", err)
+	}
 
 	// then
 	assert.True(t, rr.Code == http.StatusOK)
