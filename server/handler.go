@@ -1,10 +1,11 @@
-package rest
+package server
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
+// Response contains the http response body data
 type Response struct {
 	ImageURL    string `json:"image_url"`
 	Name        string `json:"name"`
@@ -15,17 +16,17 @@ type Response struct {
 	BreedGroup  string `json:"breed_group"`
 }
 
-func (s *Service) GetRandomDog(w http.ResponseWriter, r *http.Request) {
-	dogInfo, err := s.Client.GetRandomDogInfo()
+// GetRandomDog returns random dog data from the DogAPI
+func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	dogInfo, err := s.DogAPIClient.GetRandomDogInfo()
 	if err != nil {
 		s.ErrorLog.Printf("%s", err.Error())
 
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 
 	dogImage := dogInfo[0].URL
 	dog := dogInfo[0].Breeds[0]
@@ -43,7 +44,7 @@ func (s *Service) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		s.ErrorLog.Printf("%s", err.Error())
 
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }

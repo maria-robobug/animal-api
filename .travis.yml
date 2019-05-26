@@ -1,36 +1,16 @@
-# use the latest ubuntu environment (18.04) available on travis
 dist: xenial
-
 language: go
-
-# Force-enable Go modules. Also force go to use the code in vendor/
-# These will both be unnecessary when Go 1.13 lands.
 env:
-  - GO111MODULE=on
-  # - GOFLAGS='-mod vendor'
-
-# You don't need to test on very old versions of the Go compiler. It's the user's
-# responsibility to keep their compiler up to date.
+  global:
+    - GO111MODULE=on
+    - secure: oSb7dHqjadJ59kYxsh2Xorxv/JXxGHy4BgZmZ1qFrvHGjFe449dfFl7lpkgG0DJYeqAqyRvgEC1C4yJX7NUYkNO7LcMym64pIL2WfdTec77j8XVYmdBK9fgdHoZqzNY3KZICLoGTWnw5neYnKLEsm1tDvH+rl82qTO1hJOwA37X4qBCe5j/KrrcUxzJpHnrWAG+ZvjI5bIT7A38E1iwknag3INrPhoXKLVr8lUQ4TRI8okbdLsWgQIxfYNvDvUSwHp1aZIWLLattkYVQpZg9ATrK+gR2Kh12cvVbnECijHRRorBLLLJFzx5lfH6uRD+QZAYv+pA9eNacYcGzczXyfeW5rc/42q9Ac6DGm604x/ExUfYeAzIEE8A02XKfQ8jjXgsHBq2PPmF0njyLXTywPMjCUkS9lQMOwDilfxuDzKYXPgWSaN8YyPsuhN9Z3LGGMTQZykWoBq3D4nZfJ7GzadPzveM9462V1ytZXs2YALpBb1p1huiIGJ/mCErZcSxFztQjRxxKXpnLdYSJ1OyLeRq0Z9HzdVMbApEpLlUkDUSRICbEXzztWkJYtzgDeV8WewNR81lEJQFzdQVjM9jRE/c3pxqsvfDRpfJGHplgfWNgndlrWgZfpciLL7h3gyfKfwTpQzVZa0Kb13CyDDN41CHJx4dnfpK/L+yCGmSJA/U=
 go:
-  - 1.12.1
-
-# Skip the install step. Don't `go get` dependencies. Only build with the code
-# in vendor/
+- 1.12.1
 install: true
-
-# Don't email me the results of the test runs.
 notifications:
   email: false
-
-# Anything in before_script that returns a nonzero exit code will flunk the
-# build and immediately stop. It's sorta like having set -e enabled in bash.
-# Make sure golangci-lint is vendored.
 before_script:
-  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
-
-# script always runs to completion (set +e). If we have linter issues AND a
-# failing test, we want to see both. Configure golangci-lint with a
-# .golangci.yml file at the top level of your repo.
+  - go get -u golang.org/x/lint/golint
 script:
-  - golangci-lint run # run a bunch of code checkers/linters in parallel
-  - go test -v ./...
+- golint ./...
+- go test -v ./...

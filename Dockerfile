@@ -12,14 +12,9 @@ ENV GO111MODULE=on \
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
-
-RUN go mod download
-
 COPY . .
 
-RUN go test -v ./...
+RUN go mod download
 RUN go build -o animal-api
 
 #############################
@@ -27,10 +22,10 @@ RUN go build -o animal-api
 #############################
 FROM scratch
 
+EXPOSE 8080
+
 # Import files from the builder.
 COPY --from=builder /app/animal-api /app/
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-
-EXPOSE 8080
 
 ENTRYPOINT [ "/app/animal-api" ]
