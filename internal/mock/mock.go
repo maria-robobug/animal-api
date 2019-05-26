@@ -3,7 +3,8 @@ package mock
 import (
 	"encoding/json"
 
-	"github.com/maria-robobug/animal-api/internal/client"
+	"github.com/maria-robobug/animal-api/model"
+
 	"github.com/stretchr/testify/mock"
 )
 
@@ -40,10 +41,10 @@ type DogAPI struct {
 }
 
 // GetRandomDogInfo mocks the method to get a random dog
-func (a *DogAPI) GetRandomDogInfo() ([]client.DogInfo, error) {
+func (a *DogAPI) GetRandomDogInfo() ([]model.DogInfo, error) {
 	args := a.Mock.Called()
 
-	d := []client.DogInfo{}
+	d := []model.DogInfo{}
 	err := json.Unmarshal([]byte(defaultResp), &d)
 	if err != nil {
 		return d, err
