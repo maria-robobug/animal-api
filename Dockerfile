@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . .
 
 RUN go mod download
-RUN go build -o animal-api
+RUN go build ./cmd/animal-api/
 
 #############################
 # STEP 2 build a small image
