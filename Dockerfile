@@ -22,10 +22,10 @@ RUN go build -o animal-api
 #############################
 FROM scratch
 
+EXPOSE 8080
+
 # Import files from the builder.
 COPY --from=builder /app/animal-api /app/
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-
-EXPOSE 8080
 
 ENTRYPOINT [ "/app/animal-api" ]
