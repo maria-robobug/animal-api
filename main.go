@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/maria-robobug/animal-api/internal/rest/dog"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/maria-robobug/animal-api/internal/client"
+	"github.com/maria-robobug/animal-api/server"
 
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
@@ -21,35 +23,34 @@ var (
 	errorLog = log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 )
 
-type config struct {
+type appConfig struct {
 	DogAPIKey  string `env:"DOG_API_KEY"`
 	ServerPort string `env:"PORT" envDefault:"8080"`
 }
 
 func main() {
-	var cfg config
-	if err := env.Parse(&cfg); err != nil {
-		errorLog.Fatalln("Failed to parse ENV")
-	}
-
 	if err := godotenv.Load(); err != nil {
 		errorLog.Println("File .env not found, reading configuration from ENV")
 	}
 
-	serv := setupServer(cfg)
+	var cfg appConfig
+	if err := env.Parse(&cfg); err != nil {
+		errorLog.Fatalln("Failed to parse ENV")
+	}
 
+	serv := setupServer(cfg)
 	errorLog.Fatal(serv.Run())
 }
 
-func setupServer(cfg config) *dog.Service {
-	servConfig := &dog.Config{
-		Client:   setupClient(cfg),
-		Addr:     ":" + cfg.ServerPort,
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
+func setupServer(cfg appConfig) *server.AnimalAPIServer {
+	servConfig := &server.Config{
+		DogAPIClient: setupClient(cfg),
+		Addr:         ":" + cfg.ServerPort,
+		InfoLog:      infoLog,
+		ErrorLog:     errorLog,
 	}
 
-	serv, err := dog.NewServer(servConfig)
+	serv, err := server.New(servConfig)
 	if err != nil {
 		errorLog.Fatalf("could not initialise server: %s", err)
 	}
@@ -57,7 +58,7 @@ func setupServer(cfg config) *dog.Service {
 	return serv
 }
 
-func setupClient(cfg config) *dog.Client {
+func setupClient(cfg appConfig) *client.DogAPIClient {
 	// Client configuration
 	tr := &http.Transport{
 		MaxIdleConns:       10,
@@ -65,7 +66,7 @@ func setupClient(cfg config) *dog.Client {
 		DisableCompression: true,
 	}
 
-	client, err := dog.NewClient(dogapiBaseURL, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
+	client, err := client.New(dogapiBaseURL, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
 	if err != nil {
 		errorLog.Fatalf("could not create dog client: %s", err)
 	}

@@ -1,9 +1,11 @@
-package dog
+package server
 
 import (
 	"errors"
 	"log"
 	"net/http"
+
+	"github.com/maria-robobug/animal-api/internal/client"
 
 	"github.com/gorilla/mux"
 )
@@ -16,40 +18,40 @@ var (
 
 // Server interface
 type Server interface {
-	NewServer(cnfg *Config) (*Server, error)
+	New(cnfg *Config) (*Server, error)
 	GetRandomDog(w http.ResponseWriter, r *http.Request)
 }
 
-// Service holds service client and server information
-type Service struct {
-	Client            DogAPI
+// AnimalAPIServer holds service client and server information
+type AnimalAPIServer struct {
+	DogAPIClient      client.DogAPI
 	Server            *http.Server
 	InfoLog, ErrorLog *log.Logger
 }
 
 // Config holds service config information
 type Config struct {
-	Client            DogAPI
+	DogAPIClient      client.DogAPI
 	Addr              string
 	InfoLog, ErrorLog *log.Logger
 }
 
-// NewServer returns a new service
-func NewServer(cnfg *Config) (*Service, error) {
-	if cnfg.Client == nil {
-		return &Service{}, errConfigNilClient
+// New returns a new service
+func New(cnfg *Config) (*AnimalAPIServer, error) {
+	if cnfg.DogAPIClient == nil {
+		return &AnimalAPIServer{}, errConfigNilClient
 	}
 
 	if cnfg.Addr == "" {
-		return &Service{}, errConfigMissingPort
+		return &AnimalAPIServer{}, errConfigMissingPort
 	}
 
 	if cnfg.InfoLog == nil || cnfg.ErrorLog == nil {
-		return &Service{}, errLoggerMissing
+		return &AnimalAPIServer{}, errLoggerMissing
 	}
 
-	return &Service{
-		Client: cnfg.Client,
+	return &AnimalAPIServer{
+		DogAPIClient: cnfg.DogAPIClient,
 		Server: &http.Server{
 			Addr:     cnfg.Addr,
 			ErrorLog: cnfg.ErrorLog,
@@ -60,15 +62,15 @@ func NewServer(cnfg *Config) (*Service, error) {
 }
 
 // Run starts the server
-func (s *Service) Run() error {
+func (s *AnimalAPIServer) Run() error {
 	s.registerRoutes()
 
 	s.InfoLog.Printf("Starting server on %s", s.Server.Addr)
 	return s.Server.ListenAndServe()
 }
 
-func (s *Service) registerRoutes() {
+func (s *AnimalAPIServer) registerRoutes() {
 	r := mux.NewRouter()
-	r.HandleFunc("/api/v1/dog", s.GetRandomDog)
+	r.HandleFunc("/api/v1/dogs", s.GetRandomDog)
 	s.Server.Handler = r
 }

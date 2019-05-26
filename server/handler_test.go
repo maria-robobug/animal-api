@@ -1,4 +1,4 @@
-package dog_test
+package server_test
 
 import (
 	"encoding/json"
@@ -10,15 +10,16 @@ import (
 	"os"
 	"testing"
 
+	"github.com/maria-robobug/animal-api/server"
+
 	"github.com/maria-robobug/animal-api/internal/mock"
 
-	"github.com/maria-robobug/animal-api/internal/rest/dog"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetRandomDog_Valid(t *testing.T) {
 	// initialise mocks and data
-	expected := &rest.Response{
+	expected := &server.Response{
 		ImageURL:    "https://somecdn.com/images/blah.jpg",
 		Name:        "Boston Terrier",
 		Height:      "41 - 43 cm",
@@ -31,11 +32,11 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(nil)
 
-	serv := &rest.Service{
-		Client:   mockClient,
-		Server:   &http.Server{},
-		InfoLog:  log.New(os.Stdin, "", 0),
-		ErrorLog: log.New(os.Stderr, "", 0),
+	serv := &server.AnimalAPIServer{
+		DogAPIClient: mockClient,
+		Server:       &http.Server{},
+		InfoLog:      log.New(os.Stdin, "", 0),
+		ErrorLog:     log.New(os.Stderr, "", 0),
 	}
 
 	// given
@@ -44,12 +45,8 @@ func TestGetRandomDog_Valid(t *testing.T) {
 
 	// when
 	testHandler.ServeHTTP(rr, r)
-
-	body := &rest.Response{}
-	err := json.Unmarshal(rr.Body.Bytes(), body)
-	if err != nil {
-		t.Errorf("unable to read response: %s", err)
-	}
+	body := &server.Response{}
+	json.Unmarshal(rr.Body.Bytes(), body)
 
 	// then
 	assert.True(t, rr.Code == http.StatusOK)
@@ -60,11 +57,11 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 	// initialise mocks and data
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
-	serv := &rest.Service{
-		Client:   mockClient,
-		Server:   &http.Server{},
-		InfoLog:  log.New(os.Stdin, "", 0),
-		ErrorLog: log.New(os.Stderr, "", 0),
+	serv := &server.AnimalAPIServer{
+		DogAPIClient: mockClient,
+		Server:       &http.Server{},
+		InfoLog:      log.New(os.Stdin, "", 0),
+		ErrorLog:     log.New(os.Stderr, "", 0),
 	}
 
 	// given

@@ -1,4 +1,4 @@
-package dog
+package client
 
 import (
 	"encoding/json"
@@ -12,6 +12,12 @@ var (
 
 type DogAPI interface {
 	GetRandomDogInfo() ([]DogInfo, error)
+}
+
+type DogAPIClient struct {
+	BaseURL string
+	APIKey  string
+	Client  *http.Client
 }
 
 type DogInfo struct {
@@ -32,25 +38,19 @@ type Measure struct {
 	Metric string `json:"metric"`
 }
 
-type Client struct {
-	BaseURL string
-	APIKey  string
-	Client  *http.Client
-}
-
-func NewClient(baseURL, apiKey string, httpClient *http.Client) (*Client, error) {
+func New(baseURL, apiKey string, httpClient *http.Client) (*DogAPIClient, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}
 
-	return &Client{
+	return &DogAPIClient{
 		BaseURL: baseURL,
 		APIKey:  apiKey,
 		Client:  httpClient,
 	}, nil
 }
 
-func (c *Client) GetRandomDogInfo() ([]DogInfo, error) {
+func (c *DogAPIClient) GetRandomDogInfo() ([]DogInfo, error) {
 	const endpoint = "/images/search?size=small&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1"
 
 	req, err := http.NewRequest("GET", c.BaseURL+endpoint, nil)
