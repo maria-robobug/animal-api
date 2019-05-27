@@ -41,7 +41,7 @@ func TestGetRandomDog_Valid(t *testing.T) {
 
 	// given
 	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
-	testHandler := http.HandlerFunc(serv.GetRandomDog)
+	testHandler := http.HandlerFunc(serv.GetDailyDog)
 
 	// when
 	testHandler.ServeHTTP(rr, r)
@@ -68,7 +68,7 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 
 	// given
 	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
-	testHandler := http.HandlerFunc(serv.GetRandomDog)
+	testHandler := http.HandlerFunc(serv.GetDailyDog)
 
 	// when
 	testHandler.ServeHTTP(rr, r)

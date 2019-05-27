@@ -91,7 +91,7 @@ func (s *AnimalAPIServer) registerRoutes() {
 		middleware.Recoverer,
 	)
 
-	r.Get("/api/v1/dogs", s.GetRandomDog)
+	r.Get("/api/v1/dogs", s.GetDailyDog)
 
 	s.logServerRoutes(r)
 	s.Server.Handler = r
@@ -99,7 +99,7 @@ func (s *AnimalAPIServer) registerRoutes() {
 
 func (s *AnimalAPIServer) logServerRoutes(r *chi.Mux) {
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		s.InfoLog.Printf("-> %s %s\n", method, route)
+		s.InfoLog.Printf("r o u t e -> %s %s\n", method, route)
 		return nil
 	}
 

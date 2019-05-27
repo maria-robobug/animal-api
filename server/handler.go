@@ -17,8 +17,8 @@ type Response struct {
 	BreedGroup  string `json:"breed_group"`
 }
 
-// GetRandomDog returns random dog data from the DogAPI
-func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
+// GetDailyDog returns random dog data from the DogAPI
+func (s *AnimalAPIServer) GetDailyDog(w http.ResponseWriter, r *http.Request) {
 	dogInfo, err := s.DogAPIClient.GetRandomDogInfo()
 	if err != nil {
 		s.ErrorLog.Printf("%s", err.Error())

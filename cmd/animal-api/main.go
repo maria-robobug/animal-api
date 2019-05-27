@@ -25,30 +25,38 @@ var (
 	errorLog = log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 )
 
+var dogAPIClient *client.DogAPIClient
+var redisCache *storage.RedisCache
+var cfg appConfig
+
 type appConfig struct {
 	DogAPIKey  string `env:"DOG_API_KEY"`
 	ServerPort string `env:"PORT" envDefault:"8080"`
 	RedisHost  string `env:"REDIS_HOST" envDefault:"localhost:6379"`
 }
 
-func main() {
+func init() {
 	if err := godotenv.Load(); err != nil {
 		errorLog.Println("File .env not found, reading configuration from ENV")
 	}
 
-	var cfg appConfig
 	if err := env.Parse(&cfg); err != nil {
 		errorLog.Fatalln("Failed to parse ENV")
 	}
 
+	redisCache = setupCache(cfg.RedisHost)
+	dogAPIClient = setupClient(cfg.DogAPIKey)
+}
+
+func main() {
 	serv := setupServer(cfg)
 	errorLog.Fatal(serv.Run())
 }
 
 func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	servConfig := &server.Config{
-		Cache:        setupCache(cfg.RedisHost),
-		DogAPIClient: setupClient(cfg.DogAPIKey),
+		Cache:        redisCache,
+		DogAPIClient: dogAPIClient,
 		Addr:         ":" + cfg.ServerPort,
 		InfoLog:      infoLog,
 		ErrorLog:     errorLog,
@@ -65,9 +73,10 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 func setupCache(host string) *storage.RedisCache {
 	rc, err := storage.NewCache(host)
 	if err != nil {
-		errorLog.Fatalf("could not create redis cache: %s", err)
+		errorLog.Fatalf("redis cache: %s", err)
 	}
 
+	infoLog.Println("Connected to redis successfully")
 	return rc
 }
 
@@ -87,7 +96,7 @@ func setupClient(apiKey string) *client.DogAPIClient {
 		},
 	)
 	if err != nil {
-		errorLog.Fatalf("could not create dog client: %s", err)
+		errorLog.Fatalf("dog api client: %s", err)
 	}
 
 	return client
