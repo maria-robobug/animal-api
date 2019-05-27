@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/maria-robobug/animal-api/internal/storage"
+
 	"github.com/maria-robobug/animal-api/internal/client"
 	"github.com/maria-robobug/animal-api/server"
 
@@ -26,6 +28,7 @@ var (
 type appConfig struct {
 	DogAPIKey  string `env:"DOG_API_KEY"`
 	ServerPort string `env:"PORT" envDefault:"8080"`
+	RedisHost  string `env:"REDIS_HOST" envDefault:"localhost:6379"`
 }
 
 func main() {
@@ -44,7 +47,8 @@ func main() {
 
 func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	servConfig := &server.Config{
-		DogAPIClient: setupClient(cfg),
+		Cache:        setupCache(cfg.RedisHost),
+		DogAPIClient: setupClient(cfg.DogAPIKey),
 		Addr:         ":" + cfg.ServerPort,
 		InfoLog:      infoLog,
 		ErrorLog:     errorLog,
@@ -58,15 +62,30 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	return serv
 }
 
-func setupClient(cfg appConfig) *client.DogAPIClient {
-	// Client configuration
+func setupCache(host string) *storage.RedisCache {
+	rc, err := storage.NewCache(host)
+	if err != nil {
+		errorLog.Fatalf("could not create redis cache: %s", err)
+	}
+
+	return rc
+}
+
+func setupClient(apiKey string) *client.DogAPIClient {
 	tr := &http.Transport{
 		MaxIdleConns:       10,
 		IdleConnTimeout:    30 * time.Second,
 		DisableCompression: true,
 	}
 
-	client, err := client.New(dogapiBaseURL, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
+	client, err := client.New(
+		dogapiBaseURL,
+		apiKey,
+		&http.Client{
+			Transport: tr,
+			Timeout:   time.Second * 30,
+		},
+	)
 	if err != nil {
 		errorLog.Fatalf("could not create dog client: %s", err)
 	}

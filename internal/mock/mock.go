@@ -52,3 +52,18 @@ func (a *DogAPI) GetRandomDogInfo() ([]model.DogInfo, error) {
 
 	return d, args.Error(0)
 }
+
+// Cache mocks a generic cache
+type Cache struct {
+	mock.Mock
+}
+
+// Get mocks the method to get a cache key value
+func (c *Cache) Get(key string) (interface{}, error) {
+	args := c.Mock.Called()
+
+	data := make(map[string]string)
+	data["key"] = "value"
+
+	return data, args.Error(0)
+}

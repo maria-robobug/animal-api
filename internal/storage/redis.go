@@ -1,24 +1,22 @@
 package storage
 
 import (
-	"github.com/go-redis/redis"
-)
+	"fmt"
 
-const (
-	defaultRedisPort = "6379"
-	host             = "localhost"
+	"github.com/go-redis/redis"
 )
 
 // RedisCache a cache to store frequent data
 type RedisCache struct {
+	Host   string
 	client *redis.Client
 }
 
-// NewRedisCache returns an instance of RedisCache
-func NewRedisCache() (*RedisCache, error) {
+// NewCache returns an instance of RedisCache
+func NewCache(host string) (*RedisCache, error) {
 	rc := &RedisCache{
 		client: redis.NewClient(&redis.Options{
-			Addr:     host + ":" + defaultRedisPort,
+			Addr:     host,
 			Password: "",
 			DB:       0,
 		}),
@@ -30,4 +28,16 @@ func NewRedisCache() (*RedisCache, error) {
 	}
 
 	return rc, nil
+}
+
+// Get retrieves key value from cache store
+func (c *RedisCache) Get(key string) (interface{}, error) {
+	val, err := c.client.Get(key).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("key", val)
+
+	return val, nil
 }

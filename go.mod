@@ -9,6 +9,8 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/joho/godotenv v1.3.0
+	github.com/onsi/ginkgo v1.8.0 // indirect
+	github.com/onsi/gomega v1.5.0 // indirect
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
 )

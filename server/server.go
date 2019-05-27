@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/maria-robobug/animal-api/internal/storage"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
@@ -13,6 +15,7 @@ import (
 )
 
 var (
+	errCacheNil          = errors.New("invalid config: nil cache")
 	errConfigNilClient   = errors.New("invalid config: nil client")
 	errConfigMissingPort = errors.New("invalid config: missing address port")
 	errLoggerMissing     = errors.New("invalid config: logger missing")
@@ -24,22 +27,28 @@ type Server interface {
 	GetRandomDog(w http.ResponseWriter, r *http.Request)
 }
 
-// AnimalAPIServer holds service client and server information
+// AnimalAPIServer holds the server information
 type AnimalAPIServer struct {
+	Cache             storage.Cache
 	DogAPIClient      client.DogAPI
 	Server            *http.Server
 	InfoLog, ErrorLog *log.Logger
 }
 
-// Config holds service config information
+// Config holds server config information
 type Config struct {
+	Cache             storage.Cache
 	DogAPIClient      client.DogAPI
 	Addr              string
 	InfoLog, ErrorLog *log.Logger
 }
 
-// New returns a new service
+// New returns a new server
 func New(cnfg *Config) (*AnimalAPIServer, error) {
+	if cnfg.Cache == nil {
+		return &AnimalAPIServer{}, errCacheNil
+	}
+
 	if cnfg.DogAPIClient == nil {
 		return &AnimalAPIServer{}, errConfigNilClient
 	}
@@ -53,6 +62,7 @@ func New(cnfg *Config) (*AnimalAPIServer, error) {
 	}
 
 	return &AnimalAPIServer{
+		Cache:        cnfg.Cache,
 		DogAPIClient: cnfg.DogAPIClient,
 		Server: &http.Server{
 			Addr:     cnfg.Addr,
@@ -83,13 +93,17 @@ func (s *AnimalAPIServer) registerRoutes() {
 
 	r.Get("/api/v1/dogs", s.GetRandomDog)
 
+	s.logServerRoutes(r)
+	s.Server.Handler = r
+}
+
+func (s *AnimalAPIServer) logServerRoutes(r *chi.Mux) {
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
 		s.InfoLog.Printf("-> %s %s\n", method, route)
 		return nil
 	}
-	if err := chi.Walk(r, walkFunc); err != nil {
-		s.ErrorLog.Panicf("Logging err: %s\n", err.Error())
-	}
 
-	s.Server.Handler = r
+	if err := chi.Walk(r, walkFunc); err != nil {
+		s.ErrorLog.Printf("logging err: %s\n", err.Error())
+	}
 }

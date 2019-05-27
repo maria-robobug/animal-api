@@ -13,15 +13,16 @@ import (
 )
 
 var (
-	infoLog  = log.New(os.Stdin, "", 0)
-	errorLog = log.New(os.Stderr, "", 0)
+	infoLog    = log.New(os.Stdin, "", 0)
+	errorLog   = log.New(os.Stderr, "", 0)
+	mockClient = new(mock.DogAPI)
+	mockCache  = new(mock.Cache)
 )
 
 func TestNewServer_ValidConfig(t *testing.T) {
-	mockClient := new(mock.DogAPI)
-
 	// given
 	cnfg := &server.Config{
+		Cache:        mockCache,
 		DogAPIClient: mockClient,
 		Addr:         ":9000",
 		InfoLog:      infoLog,
@@ -40,6 +41,7 @@ func TestNewServer_ValidConfig(t *testing.T) {
 func TestNewServer_MissingClient(t *testing.T) {
 	// given
 	cnfg := &server.Config{
+		Cache:    mockCache,
 		Addr:     ":9000",
 		InfoLog:  infoLog,
 		ErrorLog: errorLog,
@@ -53,11 +55,27 @@ func TestNewServer_MissingClient(t *testing.T) {
 	assert.Equal(t, err.Error(), "invalid config: nil client")
 }
 
-func TestNewServer_MissingAddrPort(t *testing.T) {
-	mockClient := new(mock.DogAPI)
-
+func TestNewServer_MissingCache(t *testing.T) {
 	// given
 	cnfg := &server.Config{
+		DogAPIClient: mockClient,
+		Addr:         ":9000",
+		InfoLog:      infoLog,
+		ErrorLog:     errorLog,
+	}
+
+	// when
+	_, err := server.New(cnfg)
+
+	// then
+	assert.NotNil(t, err, "error is nil")
+	assert.Equal(t, err.Error(), "invalid config: nil cache")
+}
+
+func TestNewServer_MissingAddrPort(t *testing.T) {
+	// given
+	cnfg := &server.Config{
+		Cache:        mockCache,
 		DogAPIClient: mockClient,
 		InfoLog:      infoLog,
 		ErrorLog:     errorLog,
@@ -72,10 +90,12 @@ func TestNewServer_MissingAddrPort(t *testing.T) {
 }
 
 func TestNewServer_MissingLogger(t *testing.T) {
-	mockClient := new(mock.DogAPI)
-
 	// given
-	cnfg := &server.Config{DogAPIClient: mockClient, Addr: ":8000"}
+	cnfg := &server.Config{
+		Cache:        mockCache,
+		DogAPIClient: mockClient,
+		Addr:         ":8000",
+	}
 
 	// when
 	_, err := server.New(cnfg)
