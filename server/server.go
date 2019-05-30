@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/maria-robobug/animal-api/internal/storage"
 
@@ -65,8 +66,10 @@ func New(cnfg *Config) (*AnimalAPIServer, error) {
 		Cache:        cnfg.Cache,
 		DogAPIClient: cnfg.DogAPIClient,
 		Server: &http.Server{
-			Addr:     cnfg.Addr,
-			ErrorLog: cnfg.ErrorLog,
+			Addr:         cnfg.Addr,
+			ReadTimeout:  30 * time.Second,
+			WriteTimeout: 30 * time.Second,
+			ErrorLog:     cnfg.ErrorLog,
 		},
 		InfoLog:  cnfg.InfoLog,
 		ErrorLog: cnfg.ErrorLog,

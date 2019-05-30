@@ -26,7 +26,7 @@ var (
 )
 
 var dogAPIClient *client.DogAPIClient
-var redisCache *storage.RedisCache
+var redisPoolConn *storage.RedisConn
 var cfg appConfig
 
 type appConfig struct {
@@ -44,18 +44,20 @@ func init() {
 		errorLog.Fatalln("Failed to parse ENV")
 	}
 
-	redisCache = setupCache(cfg.RedisHost)
+	redisPoolConn = setupRedisPool(cfg.RedisHost)
 	dogAPIClient = setupClient(cfg.DogAPIKey)
 }
 
 func main() {
+	defer redisPoolConn.CloseRedisConn()
+
 	serv := setupServer(cfg)
 	errorLog.Fatal(serv.Run())
 }
 
 func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	servConfig := &server.Config{
-		Cache:        redisCache,
+		Cache:        redisPoolConn,
 		DogAPIClient: dogAPIClient,
 		Addr:         ":" + cfg.ServerPort,
 		InfoLog:      infoLog,
@@ -70,10 +72,10 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	return serv
 }
 
-func setupCache(host string) *storage.RedisCache {
-	rc, err := storage.NewCache(host)
+func setupRedisPool(host string) *storage.RedisConn {
+	rc, err := storage.NewRedisPool(host)
 	if err != nil {
-		errorLog.Fatalf("redis cache: %s", err)
+		errorLog.Fatalf("redis pool: %s", err)
 	}
 
 	infoLog.Println("Connected to redis successfully")

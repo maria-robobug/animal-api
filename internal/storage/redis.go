@@ -3,41 +3,65 @@ package storage
 import (
 	"fmt"
 
-	"github.com/go-redis/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
-// RedisCache a cache to store frequent data
-type RedisCache struct {
+type redisPool struct {
 	Host   string
-	client *redis.Client
+	client *redis.Pool
 }
 
-// NewCache returns an instance of RedisCache
-func NewCache(host string) (*RedisCache, error) {
-	rc := &RedisCache{
-		client: redis.NewClient(&redis.Options{
-			Addr:     host,
-			Password: "",
-			DB:       0,
-		}),
-	}
-
-	_, err := rc.client.Ping().Result()
-	if err != nil {
-		return nil, err
-	}
-
-	return rc, nil
+type RedisConn struct {
+	conn redis.Conn
 }
 
-// Get retrieves key value from cache store
-func (c *RedisCache) Get(key string) (interface{}, error) {
-	val, err := c.client.Get(key).Result()
-	if err != nil {
-		return nil, err
+// NewRedisPool returns an instance of RedisCache
+func NewRedisPool(host string) (*RedisConn, error) {
+	rp := &redisPool{
+		client: &redis.Pool{
+			// Maximum number of idle connections in the pool.
+			MaxIdle: 80,
+			// max number of connections
+			MaxActive: 12000,
+			// Dial is an application supplied function for creating and
+			// configuring a connection.
+			Dial: func() (redis.Conn, error) {
+				c, err := redis.Dial("tcp", host)
+				if err != nil {
+					return nil, err
+				}
+				return c, err
+			},
+		},
 	}
 
-	fmt.Println("key", val)
+	return &RedisConn{
+		conn: rp.client.Get(),
+	}, nil
+}
 
-	return val, nil
+// PingRedis tests connectivity for redis
+func (c *RedisConn) PingRedis() error {
+	// Send PING command to Redis
+	// PING command returns a Redis "Simple String"
+	// Use redis.String to convert the interface type to string
+	s, err := redis.String(c.conn.Do("PING"))
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("PING Response = %s\n", s)
+	// Output: PONG
+
+	return nil
+}
+
+// CloseRedisConn closes redis connection pool
+func (c *RedisConn) CloseRedisConn() {
+	c.conn.Close()
+}
+
+// Get closes redis connection pool
+func (c *RedisConn) Get(key string) (interface{}, error) {
+	return key, nil
 }
