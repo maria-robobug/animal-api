@@ -30,7 +30,9 @@ var defaultResp = `[
       ],
       "categories": [],
       "id": "rkZRggqVX",
-      "url": "https://somecdn.com/images/blah.jpg"
+      "url": "https://somecdn.com/images/blah.jpg",
+      "width": 500,
+      "height": 200
     }
   ]`
 

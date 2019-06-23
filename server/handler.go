@@ -8,13 +8,20 @@ import (
 
 // Response contains the http response body data
 type Response struct {
-	ImageURL    string `json:"image_url"`
+	Image       Image
 	Name        string `json:"name"`
 	Height      string `json:"height"`
 	Weight      string `json:"weight"`
 	Lifespan    string `json:"lifespan"`
 	Temperament string `json:"temperament"`
 	BreedGroup  string `json:"breed_group"`
+}
+
+// Image Holds Image information for a Dog
+type Image struct {
+	URL    string `json:"url"`
+	Width  int64  `json:"width"`
+	Height int64  `json:"height"`
 }
 
 // GetRandomDog returns random dog data from the DogAPI
@@ -27,10 +34,15 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dogImage := dogInfo[0].URL
+	dogImage := Image{
+		URL:    dogInfo[0].URL,
+		Width:  dogInfo[0].Width,
+		Height: dogInfo[0].Height,
+	}
 	dog := dogInfo[0].Breeds[0]
+
 	resp := &Response{
-		ImageURL:    dogImage,
+		Image:       dogImage,
 		Name:        dog.Name,
 		Height:      dog.Height.Metric + " cm",
 		Weight:      dog.Weight.Metric + " kgs",

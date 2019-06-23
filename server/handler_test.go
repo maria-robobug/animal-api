@@ -20,7 +20,11 @@ import (
 func TestGetRandomDog_Valid(t *testing.T) {
 	// initialise mocks and data
 	expected := &server.Response{
-		ImageURL:    "https://somecdn.com/images/blah.jpg",
+		Image: server.Image{
+			URL:    "https://somecdn.com/images/blah.jpg",
+			Width:  500,
+			Height: 200,
+		},
 		Name:        "Boston Terrier",
 		Height:      "41 - 43 cm",
 		Weight:      "5 - 11 kgs",
@@ -40,7 +44,7 @@ func TestGetRandomDog_Valid(t *testing.T) {
 	}
 
 	// given
-	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
+	rr, r := makeRequest("GET", "/api/v1/dogs/random", nil)
 	testHandler := http.HandlerFunc(serv.GetRandomDog)
 
 	// when
@@ -67,7 +71,7 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 	}
 
 	// given
-	rr, r := makeRequest("GET", "/api/v1/dogs", nil)
+	rr, r := makeRequest("GET", "/api/v1/dogs/random", nil)
 	testHandler := http.HandlerFunc(serv.GetRandomDog)
 
 	// when
