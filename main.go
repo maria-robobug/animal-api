@@ -13,10 +13,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const (
-	dogapiBaseURL = "https://api.thedogapi.com/v1"
-)
-
 var (
 	// Logging configuration
 	infoLog  = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -24,8 +20,9 @@ var (
 )
 
 type appConfig struct {
-	DogAPIKey  string `env:"DOG_API_KEY"`
-	ServerPort string `env:"PORT" envDefault:"8080"`
+	DogAPIKey     string `env:"DOG_API_KEY"`
+	DogAPIBaseURI string `env:"DOG_API_BASE_URI"`
+	ServerPort    string `env:"PORT" envDefault:"8080"`
 }
 
 func main() {
@@ -66,7 +63,7 @@ func setupClient(cfg appConfig) *client.DogAPIClient {
 		DisableCompression: true,
 	}
 
-	client, err := client.New(dogapiBaseURL, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
+	client, err := client.New(cfg.DogAPIBaseURI, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
 	if err != nil {
 		errorLog.Fatalf("could not create dog client: %s", err)
 	}
