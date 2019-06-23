@@ -25,7 +25,7 @@ test:
 # having to worry about the retrieval of the binary and execution of it
 # - docker already provides the necessary boundaries.
 image:
-	docker build -t $(IMAGE_NAME) .
+	docker build -t $(IMAGE_NAME):$(VERSION) .
 
 # This is pretty much an optional thing that I tend always to include.
 #
