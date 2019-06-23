@@ -23,6 +23,8 @@ type DogAPIClient struct {
 type DogInfo struct {
 	Breeds []Breed `json:"breeds"`
 	URL    string  `json:"url"`
+	Width  int64   `json:"width"`
+	Height int64   `json:"height"`
 }
 
 type Breed struct {
