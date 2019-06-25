@@ -17,7 +17,7 @@ type Response struct {
 	BreedGroup  string `json:"breed_group"`
 }
 
-// Image Holds Image information for a Dog
+// Image holds Image information for a Dog
 type Image struct {
 	URL    string `json:"url"`
 	Width  int64  `json:"width"`
@@ -39,6 +39,7 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		Width:  dogInfo[0].Width,
 		Height: dogInfo[0].Height,
 	}
+
 	dog := dogInfo[0].Breeds[0]
 
 	resp := &Response{
