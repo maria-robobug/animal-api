@@ -1,6 +1,7 @@
 dist: xenial
 services:
 - docker
+
 language: go
 env:
   global:
@@ -20,9 +21,15 @@ before_deploy:
 - echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin
 
 deploy:
-  provider: script
+- provider: script
   script: make image && make release
   on:
     branch: master
+- provider: releases
+  api_key: $GH_TOKEN
+  on:
+    tags: true
+    branch: master
+
 notifications:
   email: false
