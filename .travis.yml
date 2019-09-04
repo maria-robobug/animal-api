@@ -1,16 +1,32 @@
 dist: xenial
+services:
+  - 'docker'
+
 language: go
 env:
   global:
     - GO111MODULE=on
-    - secure: oSb7dHqjadJ59kYxsh2Xorxv/JXxGHy4BgZmZ1qFrvHGjFe449dfFl7lpkgG0DJYeqAqyRvgEC1C4yJX7NUYkNO7LcMym64pIL2WfdTec77j8XVYmdBK9fgdHoZqzNY3KZICLoGTWnw5neYnKLEsm1tDvH+rl82qTO1hJOwA37X4qBCe5j/KrrcUxzJpHnrWAG+ZvjI5bIT7A38E1iwknag3INrPhoXKLVr8lUQ4TRI8okbdLsWgQIxfYNvDvUSwHp1aZIWLLattkYVQpZg9ATrK+gR2Kh12cvVbnECijHRRorBLLLJFzx5lfH6uRD+QZAYv+pA9eNacYcGzczXyfeW5rc/42q9Ac6DGm604x/ExUfYeAzIEE8A02XKfQ8jjXgsHBq2PPmF0njyLXTywPMjCUkS9lQMOwDilfxuDzKYXPgWSaN8YyPsuhN9Z3LGGMTQZykWoBq3D4nZfJ7GzadPzveM9462V1ytZXs2YALpBb1p1huiIGJ/mCErZcSxFztQjRxxKXpnLdYSJ1OyLeRq0Z9HzdVMbApEpLlUkDUSRICbEXzztWkJYtzgDeV8WewNR81lEJQFzdQVjM9jRE/c3pxqsvfDRpfJGHplgfWNgndlrWgZfpciLL7h3gyfKfwTpQzVZa0Kb13CyDDN41CHJx4dnfpK/L+yCGmSJA/U=
+    - REGISTRY_USER=travis@travis-ci.org
+    - secure: NmOW8EsJrhwuBhS07L2fF0oAOBIzciXeBPJP83HefWT3NQjBA+cKkeK99aQUZ6wa8vv4kd+J5qgbMTxf+sB2MNmXImOOVFONg27os1N6d5ZA2K3TPFJ1Y9Lpw3Iq85xLodngAv869fE4rHiLxVkEch3qQeqts2m+/JwM6fwy2pcDZVg1sAz+y0XDoNhXNs70EzBHQJTdHUQ+MdsOahLTvqkP/61jSrVTBB6pixdc4VERaZ84MC3/j7DF3e+BwTJpDFXeYJZD+E+S7vxKR8sx3QQRAgPgGg0HeQ7cw5Dcw//wdy5HiiJJoC6hYkELM7WptPgM+ev0Yg+aOJipy979V7FgIMB/3WR+E9RgLvLb65LhX1P76qjC5ovtYhDNXhpw02YswLMAGg2+ewnT0eSoIa7vjluaudoW1p7Ivo7gAqBk9uXCMnh3KeAhdUyfRPnDKP4p8vvonKTRqT8coVDF8+6x/znNspxHKLm2XUfqsopG2SidyAO3H6SjoPquSRJMxG1HcCX3cremEZZovYWow+6yOPp+oPRDyQhMV5hCTSgBSbkkTswpLMO1pdFj0VArOMsnlrOVdQRmv0tf3ZZ/oMQtVCAo+45aY/+6MpaRrq1SjuItMmdsXN/X5mEGy8QIPwyCy/U/6v1U2y6BTkboYrS1IE9bl5Rzkpe8hPbIehQ=
 go:
-- 1.12.1
+  - 1.12.1
 install: true
-notifications:
-  email: false
+
 before_script:
   - go get -u golang.org/x/lint/golint
 script:
-- golint ./...
-- go test -v ./...
+  - golint ./...
+  - make test
+
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$GH_TOKEN"
+  - make image
+
+deploy:
+  provider: script
+  script: make release
+  on:
+    branch: master
+
+notifications:
+  email: false

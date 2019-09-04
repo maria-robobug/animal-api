@@ -83,5 +83,13 @@ func (s *AnimalAPIServer) registerRoutes() {
 
 	r.Get("/api/v1/dogs/random", s.GetRandomDog)
 
+	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		s.InfoLog.Printf("Route -> %s %s\n", method, route)
+		return nil
+	}
+	if err := chi.Walk(r, walkFunc); err != nil {
+		s.ErrorLog.Panicf("Logging err: %s\n", err.Error())
+	}
+
 	s.Server.Handler = r
 }
