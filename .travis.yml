@@ -18,6 +18,10 @@ script:
 - make test
 before_deploy:
 - echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
 deploy:
   provider: script
   script: make image && make release
