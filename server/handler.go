@@ -8,7 +8,7 @@ import (
 
 // Response contains the http response body data
 type Response struct {
-	Image       Image
+	Image       Image  `json:"image"`
 	Name        string `json:"name"`
 	Height      string `json:"height"`
 	Weight      string `json:"weight"`
