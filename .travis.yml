@@ -23,10 +23,5 @@ deploy:
   script: make image && make release
   on:
     branch: master
-- provider: releases
-  api_key: "$GH_TOKEN"
-  on:
-    tags: true
-    branch: master
 notifications:
   email: false
