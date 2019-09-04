@@ -22,7 +22,7 @@ push_image:
 
 release:
 	make push_image
-	git tag -a $(VERSION) -m "Release" || true
-	git push origin $(VERSION)
+	# git tag -a $(VERSION) -m "Release" || true
+	# git push origin $(VERSION)
 
 .PHONY: test image release
