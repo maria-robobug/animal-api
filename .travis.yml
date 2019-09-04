@@ -18,10 +18,9 @@ script:
 - make test
 before_deploy:
 - docker login -u="$REGISTRY_USER" -p="$REGISTRY_PASSWORD"
-- make image
 deploy:
   provider: script
-  script: make release
+  script: make image && make release
   on:
     branch: master
 notifications:
