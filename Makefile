@@ -7,7 +7,7 @@
 # build context and have the version set in the binary that ends
 # up inside the Docker image too.
 VERSION         :=      $(shell cat .VERSION)
-IMAGE_NAME      :=      maria-robobug/animal-api
+IMAGE_NAME      :=      mariarobobug/animal-api
 
 test:
 	go test ./... -v
@@ -22,5 +22,7 @@ push_image:
 
 release:
 	make push_image
+	git tag -a $(VERSION) -m "Release" || true
+	git push origin $(VERSION)
 
 .PHONY: test image release
