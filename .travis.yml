@@ -24,6 +24,10 @@ deploy:
   script: make image && make release
   on:
     branch: master
+- provider: releases
+  api_key: "$GH_TOKEN"
+  on:
+    tags: true
 - provider: heroku
   api_key: "$HEROKU_TOKEN"
   app: go-animal-api
