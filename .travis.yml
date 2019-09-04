@@ -12,22 +12,19 @@ env:
 go:
 - 1.12.1
 install: true
+
 before_script:
 - go get -u golang.org/x/lint/golint
 script:
 - golint ./...
 - make test
+
 before_deploy:
-- echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin
+- docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
 deploy:
 - provider: script
-  script: make image && make release
+  script: make release
   on:
     branch: master
-# - provider: heroku
-#   api_key: "$HEROKU_TOKEN"
-#   app: go-animal-api
-#   on:
-#     repo: maria-robobug/animal-api
 notifications:
   email: false

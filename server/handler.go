@@ -24,6 +24,13 @@ type Image struct {
 	Height int64  `json:"height"`
 }
 
+// GetHealth returns OK status
+func (s *AnimalAPIServer) GetHealth(w http.ResponseWriter, r *http.Request) {
+	resp := struct{ Status string }{http.StatusText(http.StatusOK)}
+
+	render.JSON(w, r, resp)
+}
+
 // GetRandomDog returns random dog data from the DogAPI
 func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 	dogInfo, err := s.DogAPIClient.GetRandomDogInfo()

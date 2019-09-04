@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -79,8 +80,11 @@ func (s *AnimalAPIServer) registerRoutes() {
 		middleware.DefaultCompress,
 		middleware.RedirectSlashes,
 		middleware.Recoverer,
+		middleware.Timeout(60*time.Second), // Sets a timeout value on the request context (ctx)
 	)
 
+	r.Get("/", s.GetHealth)
+	r.Get("/health", s.GetHealth)
 	r.Get("/api/v1/dogs/random", s.GetRandomDog)
 
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
