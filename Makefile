@@ -23,15 +23,9 @@ push_image:
 release:
 	# git config --global user.email "travis@travis-ci.org"
 	# git config --global user.name "Travis CI"
-<<<<<<< HEAD
 	# git add .
 	# git tag -a $(VERSION) -m "Release" || true
 	# git push origin $(VERSION)
-=======
-	git add .
-	git tag -a $(VERSION) -m "Release" || true
-	git push origin $(VERSION)
->>>>>>> 8fb3e8c7d819c29535f3669b6c7e2cb4f354d116
 	make push_image
 
 .PHONY: test image release
