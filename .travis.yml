@@ -1,14 +1,13 @@
 dist: xenial
 services:
 - docker
-
 language: go
 env:
   global:
   - GO111MODULE=on
   - REGISTRY_USER=mariarobobug
-  - secure: NmOW8EsJrhwuBhS07L2fF0oAOBIzciXeBPJP83HefWT3NQjBA+cKkeK99aQUZ6wa8vv4kd+J5qgbMTxf+sB2MNmXImOOVFONg27os1N6d5ZA2K3TPFJ1Y9Lpw3Iq85xLodngAv869fE4rHiLxVkEch3qQeqts2m+/JwM6fwy2pcDZVg1sAz+y0XDoNhXNs70EzBHQJTdHUQ+MdsOahLTvqkP/61jSrVTBB6pixdc4VERaZ84MC3/j7DF3e+BwTJpDFXeYJZD+E+S7vxKR8sx3QQRAgPgGg0HeQ7cw5Dcw//wdy5HiiJJoC6hYkELM7WptPgM+ev0Yg+aOJipy979V7FgIMB/3WR+E9RgLvLb65LhX1P76qjC5ovtYhDNXhpw02YswLMAGg2+ewnT0eSoIa7vjluaudoW1p7Ivo7gAqBk9uXCMnh3KeAhdUyfRPnDKP4p8vvonKTRqT8coVDF8+6x/znNspxHKLm2XUfqsopG2SidyAO3H6SjoPquSRJMxG1HcCX3cremEZZovYWow+6yOPp+oPRDyQhMV5hCTSgBSbkkTswpLMO1pdFj0VArOMsnlrOVdQRmv0tf3ZZ/oMQtVCAo+45aY/+6MpaRrq1SjuItMmdsXN/X5mEGy8QIPwyCy/U/6v1U2y6BTkboYrS1IE9bl5Rzkpe8hPbIehQ=
   - secure: HKz4VaSzJCibZich61TcUjnkxkakUeJAtlMI+9dPnvbWaovYrUYSCySxUwKMWwM8y8nJ0QZF3kIuaSR1Wr4z6bNKWkhaDWiZH7nOlXD5R4hDgMoU9jb9urC7hrl66pR6ZTjXWvLzhpmrzI4usk9AORy9oySfMijJONsmq4k8f6w8kW9i/uxs1SExBfFNxnzk4zaKS9x2YV3EQeshmZou12pBZf5qaFAhRPUvivYAHUJKGaRLTEfHicWKIhlEpGew3CDhkvUzFJgAodWId+OfN73XJoapjzuPEvGEeBHKUGVngCCM8YkGs0eZebCNrvk8YMbVZf7jDdmMe36alMY+qmbhKD7v5btfCD+lmJcS7q++KlsP0phXmIUgNVQWaxDWW2JU3H6goKy4YcCPTuIBiMzm+S3jvCU1z1d//vh3UX2kiVy/2r7YceMv7DkshkFgIEdTE4+9WHrGT+8FsV9q2F6rwAwss0g3M2fToTMUg7puD7A1T7k+thB6G3vS85swLJRF9Vt6TwXjoIT0hFHR4dWYc2oreR7uI/CnCY1Qh0VLjJ8HYCdRqgoPYSdaJxkyPMOQQE9bPnKswAFoogq/3czbTJSF1J9FUcbRMYwOrjfgAWCxAEhcQq77W+2Mm3JDzfwUhEKg61KKxjqekYbbtY/+yOTmDnhieWXa0gtDg0g=
+  - secure: ku3PYqzDtERaoGGHPeZukYPdzvoUvpr8pyjSN7lM3oDEf7bspyF2Qxy+xHPgG1esqtaRuw82pbMsp5MZ0PoOtMMVvpU6drUgjFYGO0q+L6fSiD2tgRuyPeSkslxHP0TIQYdWarLHDDUN2uUUUVwFvlWWVKmf/SC+N/rkLmuUKaSDa5xKDIoytfZUFZcu3XpLDPXlMxJAeHBkmZ81C4uXfGxWK+bmaq4UY373vV2xYSXalKWSauiZ5+KgwEEBdEUY0aKKB/zGZ+ddlZB6OgqCurfQmvcfR4GZoA4mue9/PgmmjNGInSZXw9COlsm0W8NCbds/K7ZNdXKAiw/UhOS5UdbFixr45SvHd6D7EWm1fjOgNos9H1Z8zM9GKq5gXKIUn3zExL3SWAIjgRlrbAe2ar2wLY85Gj//8e4s/RGdhstBwe7siEpmpuwy5KJKB7wSrOvNeI9d75AT0HkDTUnIzV96vOf9mIO6pvcvC9kv5YeL2icL0aisbfkAdXrPWJBgdPcv4v0TP8rIltD+DvC81K2586uqgRGjCijMfxBmKFs+UEbWZBi6MHcLn0Megr1/g3YJyXj0txPudKrpgQO7l63oQb0k6BaFlePxcTc9GlCcD2Y+kURxjnVn6BxMMqnX3iwvuoKKHtH6quvqXypoQrv6oNCfFUKaBgr2Q/xMFS4=
 go:
 - 1.12.1
 install: true
@@ -19,17 +18,15 @@ script:
 - make test
 before_deploy:
 - echo "$REGISTRY_PASSWORD" | docker login --username "$REGISTRY_USER" --password-stdin
-
 deploy:
 - provider: script
   script: make image && make release
   on:
     branch: master
 - provider: releases
-  api_key: $GH_TOKEN
+  api_key: "$GH_TOKEN"
   on:
     tags: true
     branch: master
-
 notifications:
   email: false
