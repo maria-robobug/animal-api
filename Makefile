@@ -22,7 +22,6 @@ push_image:
 
 release:
 	make push_image
-	git tag -a $(VERSION) -m "Release" || true
-	git push origin $(VERSION)
+	./heroku_deploy.sh
 
 .PHONY: test image release
