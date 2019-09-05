@@ -27,12 +27,12 @@ type appConfig struct {
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		errorLog.Println("File .env not found, reading configuration from ENV")
+		errorLog.Println("file .env not found, reading configuration from ENV")
 	}
 
 	var cfg appConfig
 	if err := env.Parse(&cfg); err != nil {
-		errorLog.Fatalln("Failed to parse ENV")
+		errorLog.Fatalln("failed to parse ENV")
 	}
 
 	serv := setupServer(cfg)
