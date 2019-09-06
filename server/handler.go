@@ -35,7 +35,7 @@ func (s *AnimalAPIServer) GetHealth(w http.ResponseWriter, r *http.Request) {
 func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 	dogInfo, err := s.DogAPIClient.GetRandomDogInfo()
 	if err != nil {
-		s.ErrorLog.Printf("%s", err.Error())
+		s.Logger.Errorf("%s", err.Error())
 
 		w.WriteHeader(http.StatusInternalServerError)
 		return

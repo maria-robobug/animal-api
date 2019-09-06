@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/maria-robobug/animal-api/server"
 
@@ -35,12 +35,12 @@ func TestGetRandomDog_Valid(t *testing.T) {
 
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(nil)
+	logger := logrus.New()
 
 	serv := &server.AnimalAPIServer{
 		DogAPIClient: mockClient,
 		Server:       &http.Server{},
-		InfoLog:      log.New(os.Stdin, "", 0),
-		ErrorLog:     log.New(os.Stderr, "", 0),
+		Logger:       logger,
 	}
 
 	// given
@@ -63,11 +63,12 @@ func TestGetRandomDog_InternalServerError(t *testing.T) {
 	// initialise mocks and data
 	mockClient := new(mock.DogAPI)
 	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
+	logger := logrus.New()
+
 	serv := &server.AnimalAPIServer{
 		DogAPIClient: mockClient,
 		Server:       &http.Server{},
-		InfoLog:      log.New(os.Stdin, "", 0),
-		ErrorLog:     log.New(os.Stderr, "", 0),
+		Logger:       logger,
 	}
 
 	// given

@@ -2,13 +2,13 @@ package server
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	"github.com/sirupsen/logrus"
 
 	"github.com/maria-robobug/animal-api/internal/client"
 )
@@ -27,16 +27,16 @@ type Server interface {
 
 // AnimalAPIServer holds service client and server information
 type AnimalAPIServer struct {
-	DogAPIClient      client.DogAPI
-	Server            *http.Server
-	InfoLog, ErrorLog *log.Logger
+	DogAPIClient client.DogAPI
+	Server       *http.Server
+	Logger       *logrus.Logger
 }
 
 // Config holds service config information
 type Config struct {
-	DogAPIClient      client.DogAPI
-	Addr              string
-	InfoLog, ErrorLog *log.Logger
+	DogAPIClient client.DogAPI
+	Addr         string
+	Logger       *logrus.Logger
 }
 
 // New returns a new service
@@ -49,18 +49,14 @@ func New(cnfg *Config) (*AnimalAPIServer, error) {
 		return &AnimalAPIServer{}, errConfigMissingPort
 	}
 
-	if cnfg.InfoLog == nil || cnfg.ErrorLog == nil {
+	if cnfg.Logger == nil {
 		return &AnimalAPIServer{}, errLoggerMissing
 	}
 
 	return &AnimalAPIServer{
 		DogAPIClient: cnfg.DogAPIClient,
-		Server: &http.Server{
-			Addr:     cnfg.Addr,
-			ErrorLog: cnfg.ErrorLog,
-		},
-		InfoLog:  cnfg.InfoLog,
-		ErrorLog: cnfg.ErrorLog,
+		Server:       &http.Server{Addr: cnfg.Addr},
+		Logger:       cnfg.Logger,
 	}, nil
 }
 
@@ -68,7 +64,7 @@ func New(cnfg *Config) (*AnimalAPIServer, error) {
 func (s *AnimalAPIServer) Run() error {
 	s.registerRoutes()
 
-	s.InfoLog.Printf("Starting server on %s", s.Server.Addr)
+	s.Logger.Infof("starting server on %s", s.Server.Addr)
 	return s.Server.ListenAndServe()
 }
 
@@ -77,7 +73,7 @@ func (s *AnimalAPIServer) registerRoutes() {
 	r.Use(
 		render.SetContentType(render.ContentTypeJSON),
 		middleware.Logger,
-		middleware.DefaultCompress,
+		middleware.RequestID,
 		middleware.RedirectSlashes,
 		middleware.Recoverer,
 		middleware.Timeout(60*time.Second), // Sets a timeout value on the request context (ctx)
@@ -88,11 +84,11 @@ func (s *AnimalAPIServer) registerRoutes() {
 	r.Get("/api/v1/dogs/random", s.GetRandomDog)
 
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		s.InfoLog.Printf("Route -> %s %s\n", method, route)
+		s.Logger.Infof("route -> %s %s\n", method, route)
 		return nil
 	}
 	if err := chi.Walk(r, walkFunc); err != nil {
-		s.ErrorLog.Panicf("Logging err: %s\n", err.Error())
+		s.Logger.Errorf("logging err: %s\n", err.Error())
 	}
 
 	s.Server.Handler = r
