@@ -16,6 +16,7 @@ test:
 run:
 	docker run -p 9000:8080 --rm -it -v $(PWD)/.env:/.env $(REGISTRY):$(VERSION)
 
+# Docker
 image:
 	docker build --build-arg VERSION_ARG=$(shell cat .VERSION) -t $(REGISTRY):$(VERSION) .
 
