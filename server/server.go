@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	chilogger "github.com/766b/chi-logger"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
@@ -72,7 +73,7 @@ func (s *AnimalAPIServer) registerRoutes() {
 	r := chi.NewRouter()
 	r.Use(
 		render.SetContentType(render.ContentTypeJSON),
-		middleware.Logger,
+		chilogger.NewLogrusMiddleware("router", s.Logger),
 		middleware.RequestID,
 		middleware.RedirectSlashes,
 		middleware.Recoverer,

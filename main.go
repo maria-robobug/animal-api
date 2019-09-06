@@ -15,18 +15,26 @@ import (
 
 var (
 	logger = logrus.New()
+	cfg    appConfig
 )
 
 type appConfig struct {
 	DogAPIKey     string `env:"DOG_API_KEY"`
 	DogAPIBaseURI string `env:"DOG_API_BASE_URI"`
 	ServerPort    string `env:"PORT" envDefault:"8080"`
+	Environment   string `env:"ENV" envDefault:"development"`
 }
 
 func init() {
-	logger.SetFormatter(&logrus.JSONFormatter{})
-
-	logger.SetLevel(logrus.DebugLevel)
+	if cfg.Environment == "production" {
+		logger.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: "2006-01-02 15:04:05",
+		})
+	} else {
+		logger.SetFormatter(&logrus.TextFormatter{
+			FullTimestamp: true,
+		})
+	}
 }
 
 func main() {
@@ -34,7 +42,6 @@ func main() {
 		logger.Warnln("file .env not found, reading configuration from ENV")
 	}
 
-	var cfg appConfig
 	if err := env.Parse(&cfg); err != nil {
 		logger.Errorln("failed to parse ENV")
 	}
@@ -52,7 +59,7 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 
 	serv, err := server.New(servConfig)
 	if err != nil {
-		logrus.Errorf("could not initialise server: %s", err)
+		logger.Errorf("could not initialise server: %s", err)
 	}
 
 	return serv
@@ -68,7 +75,7 @@ func setupClient(cfg appConfig) *client.DogAPIClient {
 
 	client, err := client.New(cfg.DogAPIBaseURI, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
 	if err != nil {
-		logrus.Errorf("could not create dog client: %s", err)
+		logger.Errorf("could not create dog client: %s", err)
 	}
 
 	return client
