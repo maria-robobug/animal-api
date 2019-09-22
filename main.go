@@ -4,13 +4,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/sirupsen/logrus"
-
-	"github.com/maria-robobug/animal-api/internal/client"
-	"github.com/maria-robobug/animal-api/server"
-
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
+	"github.com/maria-robobug/animal-api/internal/client"
+	"github.com/maria-robobug/animal-api/server"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -73,7 +71,11 @@ func setupClient(cfg appConfig) *client.DogAPIClient {
 		DisableCompression: true,
 	}
 
-	client, err := client.New(cfg.DogAPIBaseURI, cfg.DogAPIKey, &http.Client{Transport: tr, Timeout: time.Second * 30})
+	client, err := client.New(
+		cfg.DogAPIBaseURI,
+		cfg.DogAPIKey,
+		&http.Client{Transport: tr, Timeout: time.Second * 30},
+	)
 	if err != nil {
 		logger.Errorf("could not create dog client: %s", err)
 	}

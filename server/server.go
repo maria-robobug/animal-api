@@ -9,9 +9,8 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
-	"github.com/sirupsen/logrus"
-
 	"github.com/maria-robobug/animal-api/internal/client"
+	"github.com/sirupsen/logrus"
 )
 
 var (

@@ -9,15 +9,17 @@ import (
 )
 
 func TestNewClient(t *testing.T) {
-	_, err := client.New("", "", &http.Client{})
+	t.Run("success", func(t *testing.T) {
+		_, err := client.New("", "", &http.Client{})
 
-	assert.Nil(t, err)
-}
+		assert.Nil(t, err)
+	})
 
-func TestInvalidClient(t *testing.T) {
-	invalidClientError := "invalid client: nil client provided"
-	_, err := client.New("", "", nil)
+	t.Run("error", func(t *testing.T) {
+		invalidClientError := "invalid client: nil client provided"
+		_, err := client.New("", "", nil)
 
-	assert.NotNil(t, err)
-	assert.Equal(t, err.Error(), invalidClientError)
+		assert.NotNil(t, err)
+		assert.Equal(t, err.Error(), invalidClientError)
+	})
 }
