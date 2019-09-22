@@ -3,85 +3,81 @@ package server_test
 import (
 	"encoding/json"
 	"errors"
-	"io"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/sirupsen/logrus"
-
+	clientMock "github.com/maria-robobug/animal-api/internal/mock"
+	testutils "github.com/maria-robobug/animal-api/internal/testutil"
 	"github.com/maria-robobug/animal-api/server"
-
-	"github.com/maria-robobug/animal-api/internal/mock"
-
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetRandomDog_Valid(t *testing.T) {
-	// initialise mocks and data
-	expected := &server.Response{
-		Image: server.Image{
-			URL:    "https://somecdn.com/images/blah.jpg",
-			Width:  500,
-			Height: 200,
+func TestGetRandomDog(t *testing.T) {
+	logger := logrus.New()
+	specs := []struct {
+		Title string
+		Exp   *server.Response
+	}{
+		{
+			Title: "get random dog",
+			Exp: &server.Response{
+				Image: server.Image{
+					URL:    "https://somecdn.com/images/blah.jpg",
+					Width:  500,
+					Height: 200,
+				},
+				Name:        "Boston Terrier",
+				Height:      "41 - 43 cm",
+				Weight:      "5 - 11 kgs",
+				Lifespan:    "11 - 13 years",
+				Temperament: "Friendly, Lively, Intelligent",
+				BreedGroup:  "Non-Sporting",
+			},
 		},
-		Name:        "Boston Terrier",
-		Height:      "41 - 43 cm",
-		Weight:      "5 - 11 kgs",
-		Lifespan:    "11 - 13 years",
-		Temperament: "Friendly, Lively, Intelligent",
-		BreedGroup:  "Non-Sporting",
 	}
 
-	mockClient := new(mock.DogAPI)
-	mockClient.On("GetRandomDogInfo").Return(nil)
-	logger := logrus.New()
+	t.Run("success", func(t *testing.T) {
+		mockedAPI := new(clientMock.DogAPI)
+		mockedAPI.On("GetRandomDogInfo").Return(nil)
+		serv := &server.AnimalAPIServer{
+			DogAPIClient: mockedAPI,
+			Server:       &http.Server{},
+			Logger:       logger,
+		}
 
-	serv := &server.AnimalAPIServer{
-		DogAPIClient: mockClient,
-		Server:       &http.Server{},
-		Logger:       logger,
-	}
+		for _, spec := range specs {
+			rr, r := testutils.MakeRequest("GET", "/api/v1/dogs/random", nil)
+			testHandler := http.HandlerFunc(serv.GetRandomDog)
+			testHandler.ServeHTTP(rr, r)
 
-	// given
-	rr, r := makeRequest("GET", "/api/v1/dogs/random", nil)
-	testHandler := http.HandlerFunc(serv.GetRandomDog)
+			body := &server.Response{}
+			if err := json.Unmarshal(rr.Body.Bytes(), body); err != nil {
+				t.Fatalf("unable to read response: %s", err)
+			}
 
-	// when
-	testHandler.ServeHTTP(rr, r)
-	body := &server.Response{}
-	if err := json.Unmarshal(rr.Body.Bytes(), body); err != nil {
-		t.Errorf("unable to read response: %s", err)
-	}
+			mockedAPI.AssertNumberOfCalls(t, "GetRandomDogInfo", 1)
+			assert.True(t, rr.Code == http.StatusOK)
+			assert.Equal(t, body, spec.Exp)
+		}
+	})
 
-	// then
-	assert.True(t, rr.Code == http.StatusOK)
-	assert.Equal(t, body, expected)
-}
+	t.Run("error", func(t *testing.T) {
+		t.Run("internal server error", func(t *testing.T) {
+			mockedAPI := new(clientMock.DogAPI)
+			mockedAPI.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
+			serv := &server.AnimalAPIServer{
+				DogAPIClient: mockedAPI,
+				Server:       &http.Server{},
+				Logger:       logger,
+			}
 
-func TestGetRandomDog_InternalServerError(t *testing.T) {
-	// initialise mocks and data
-	mockClient := new(mock.DogAPI)
-	mockClient.On("GetRandomDogInfo").Return(errors.New("Internal Server Error"))
-	logger := logrus.New()
+			rr, r := testutils.MakeRequest("GET", "/api/v1/dogs/random", nil)
+			testHandler := http.HandlerFunc(serv.GetRandomDog)
+			testHandler.ServeHTTP(rr, r)
 
-	serv := &server.AnimalAPIServer{
-		DogAPIClient: mockClient,
-		Server:       &http.Server{},
-		Logger:       logger,
-	}
-
-	// given
-	rr, r := makeRequest("GET", "/api/v1/dogs/random", nil)
-	testHandler := http.HandlerFunc(serv.GetRandomDog)
-
-	// when
-	testHandler.ServeHTTP(rr, r)
-
-	// then
-	assert.True(t, rr.Code == http.StatusInternalServerError)
-}
-
-func makeRequest(method, url string, body io.Reader) (*httptest.ResponseRecorder, *http.Request) {
-	return httptest.NewRecorder(), httptest.NewRequest(method, url, body)
+			mockedAPI.AssertNumberOfCalls(t, "GetRandomDogInfo", 1)
+			assert.True(t, rr.Code == http.StatusInternalServerError)
+		})
+	})
 }
