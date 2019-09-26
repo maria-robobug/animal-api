@@ -4,12 +4,11 @@
 # revision.
 VERSION      :=     $(shell cat .VERSION)
 BINARY_NAME  :=     animal-api-$(VERSION)
-REGISTRY		 := 		registry.heroku.com/go-animal-api/web
+REGISTRY     :=     registry.heroku.com/go-animal-api/web
 
 # Build for mac
 build-darwin:
-	go build -o $(BINARY_NAME)
-
+	go build -o $(BINARY_NAME) cmd/animal-api/main.go 
 test:
 	go test ./... -v
 

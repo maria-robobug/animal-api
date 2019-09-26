@@ -36,7 +36,7 @@ func init() {
 }
 
 func main() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("../../.env"); err != nil {
 		logger.Warnln("file .env not found, reading configuration from ENV")
 	}
 
@@ -64,7 +64,6 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 }
 
 func setupClient(cfg appConfig) *client.DogAPIClient {
-	// Client configuration
 	tr := &http.Transport{
 		MaxIdleConns:       10,
 		IdleConnTimeout:    30 * time.Second,

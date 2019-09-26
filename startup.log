@@ -1,0 +1,99 @@
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.007  000.007: --- VIM STARTING ---
+001.402  001.395: Allocated generic buffers
+002.308  000.906: locale set
+002.349  000.041: GUI prepared
+002.353  000.004: clipboard setup
+002.367  000.014: window checked
+003.283  000.916: inits 1
+003.304  000.021: parsing arguments
+008.051  004.747: expanding arguments
+013.518  005.467: shell init
+014.008  000.490: Termcap init
+014.050  000.042: inits 2
+019.051  005.001: init highlight
+020.740  001.537  001.537: sourcing $VIM/vimrc
+023.831  000.331  000.331: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+024.002  000.612  000.281: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/synload.vim
+032.065  007.954  007.954: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/filetype.vim
+032.117  008.871  000.305: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syntax.vim
+061.134  000.253  000.253: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+061.691  000.230  000.230: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+062.028  000.222  000.222: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+062.144  029.930  029.225: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/colors/pablo.vim
+063.827  001.526  001.526: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/nosyntax.vim
+064.714  000.242  000.242: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+065.277  000.231  000.231: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+065.997  000.518  000.518: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+066.217  002.136  001.145: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/colors/pablo.vim
+066.417  002.453  000.317: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/synload.vim
+066.462  004.248  000.269: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syntax.vim
+067.400  000.232  000.232: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+067.914  000.211  000.211: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+068.232  000.215  000.215: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/syntax/syncolor.vim
+068.335  001.628  000.970: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/colors/pablo.vim
+068.530  000.023  000.023: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/filetype.vim
+070.219  001.587  001.587: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/ftplugin.vim
+070.779  000.398  000.398: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/indent.vim
+070.910  050.060  003.375: sourcing $HOME/.vimrc
+070.918  000.270: sourcing vimrc file(s)
+076.998  001.309  001.309: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/getscriptPlugin.vim
+078.679  001.574  001.574: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/gzip.vim
+081.752  002.991  002.991: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/logiPat.vim
+082.066  000.222  000.222: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/manpager.vim
+082.769  000.580  000.580: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/matchparen.vim
+085.176  002.269  002.269: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/netrwPlugin.vim
+086.569  001.263  001.263: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/rrhelper.vim
+086.901  000.202  000.202: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/spellfile.vim
+087.451  000.479  000.479: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/tarPlugin.vim
+089.105  001.566  001.566: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/tohtml.vim
+089.754  000.523  000.523: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/vimballPlugin.vim
+091.720  001.851  001.851: sourcing /usr/local/Cellar/macvim/8.1-157/MacVim.app/Contents/Resources/vim/runtime/plugin/zipPlugin.vim
+091.744  005.997: loading plugins
+094.764  000.762  000.762: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/init.vim
+096.674  001.352  001.352: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/parts.vim
+099.509  001.375  001.375: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/util.vim
+099.610  007.461  003.972: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/plugin/airline.vim
+101.676  001.801  001.801: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-fugitive/plugin/fugitive.vim
+102.800  000.950  000.950: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-fugitive/ftdetect/fugitive.vim
+104.215  000.884  000.884: sourcing /Users/maria_shodunke/.vim/pack/plugins/start/vim-go/autoload/go/config.vim
+106.503  003.477  002.593: sourcing /Users/maria_shodunke/.vim/pack/plugins/start/vim-go/plugin/go.vim
+108.709  001.836  001.836: sourcing /Users/maria_shodunke/.vim/pack/plugins/start/vim-go/ftdetect/gofiletype.vim
+108.963  001.694: loading packages
+109.031  000.068: loading after plugins
+109.047  000.016: inits 3
+117.629  008.582: reading viminfo
+117.675  000.046: setting raw mode
+117.703  000.028: start termcap
+117.719  000.016: clearing screen
+121.390  003.256  003.256: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions.vim
+122.913  001.276  001.276: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/quickfix.vim
+125.280  002.135  002.135: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline.vim
+126.744  001.182  001.182: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/netrw.vim
+129.181  000.490  000.490: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/section.vim
+131.435  001.946  001.946: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/highlighter.vim
+131.731  004.739  002.303: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/term.vim
+133.643  001.593  001.593: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/vista.vim
+135.330  001.379  001.379: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/branch.vim
+137.053  001.280  001.280: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/fugitiveline.vim
+139.179  001.774  001.774: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/whitespace.vim
+140.902  001.190  001.190: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/po.vim
+142.800  001.585  001.585: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/wordcount.vim
+144.427  001.316  001.316: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/keymap.vim
+157.854  001.314  001.314: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/themes.vim
+159.045  004.147  002.833: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/themes/dark.vim
+183.970  003.005  003.005: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/builder.vim
+186.491  001.538  001.538: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-airline/autoload/airline/extensions/default.vim
+202.467  053.353: opening buffers
+202.495  000.028: BufEnter autocommands
+202.497  000.002: editing files in windows
+202.694  000.197: VimEnter autocommands
+202.698  000.004: before starting main loop
+231.833  016.906  016.906: sourcing /Users/maria_shodunke/.vim/pack/dist/start/vim-fugitive/autoload/fugitive.vim
+236.759  017.155: first screen update
+236.761  000.002: --- VIM STARTED ---
