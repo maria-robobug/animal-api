@@ -61,3 +61,7 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 
 	render.JSON(w, r, resp)
 }
+
+// GetRandomCat returns random cat data from the CatAPI
+func (s *AnimalAPIServer) GetRandomCat(w http.ResponseWriter, r *http.Request) {
+}
