@@ -18,7 +18,9 @@ var (
 
 type appConfig struct {
 	DogAPIKey     string `env:"DOG_API_KEY"`
+	CatAPIKey     string `env:"CAT_API_KEY"`
 	DogAPIBaseURI string `env:"DOG_API_BASE_URI"`
+	CatAPIBaseURI string `env:"CAT_API_BASE_URI"`
 	ServerPort    string `env:"PORT" envDefault:"8080"`
 	Environment   string `env:"ENV" envDefault:"development"`
 }
@@ -50,7 +52,8 @@ func main() {
 
 func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	servConfig := &server.Config{
-		DogAPIClient: setupClient(cfg),
+		DogAPIClient: setupDogClient(cfg),
+		CatAPIClient: setupCatClient(cfg),
 		Addr:         ":" + cfg.ServerPort,
 		Logger:       logger,
 	}
@@ -63,7 +66,7 @@ func setupServer(cfg appConfig) *server.AnimalAPIServer {
 	return serv
 }
 
-func setupClient(cfg appConfig) *client.DogAPIClient {
+func setupDogClient(cfg appConfig) *client.DogAPIClient {
 	// Client configuration
 	tr := &http.Transport{
 		MaxIdleConns:       10,
@@ -71,13 +74,33 @@ func setupClient(cfg appConfig) *client.DogAPIClient {
 		DisableCompression: true,
 	}
 
-	client, err := client.New(
+	client, err := client.NewDogAPI(
 		cfg.DogAPIBaseURI,
 		cfg.DogAPIKey,
 		&http.Client{Transport: tr, Timeout: time.Second * 30},
 	)
 	if err != nil {
-		logger.Errorf("could not create dog client: %s", err)
+		logger.Errorf("could not create dog-api client: %s", err)
+	}
+
+	return client
+}
+
+func setupCatClient(cfg appConfig) *client.CatAPIClient {
+	// Cat client configuration
+	tr := &http.Transport{
+		MaxIdleConns:       10,
+		IdleConnTimeout:    30 * time.Second,
+		DisableCompression: true,
+	}
+
+	client, err := client.NewCatAPI(
+		cfg.CatAPIBaseURI,
+		cfg.CatAPIKey,
+		&http.Client{Transport: tr, Timeout: time.Second * 30},
+	)
+	if err != nil {
+		logger.Errorf("could not create cat-api client: %s", err)
 	}
 
 	return client

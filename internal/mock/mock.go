@@ -113,6 +113,7 @@ func (a *DogAPI) GetRandomDogInfo() ([]client.DogInfo, error) {
 	return d, args.Error(0)
 }
 
+// GetRandomCatInfo mocks the method to get a random cat
 func (a *CatAPI) GetRandomCatInfo() ([]client.CatInfo, error) {
 	args := a.Mock.Called()
 
