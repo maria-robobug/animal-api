@@ -14,20 +14,23 @@ import (
 )
 
 var (
-	errConfigNilClient   = errors.New("invalid config: nil client")
-	errConfigMissingPort = errors.New("invalid config: missing address port")
-	errLoggerMissing     = errors.New("invalid config: logger missing")
+	errConfigNilDogClient = errors.New("invalid config: nil dog-api client")
+	errConfigNilCatClient = errors.New("invalid config: nil cat-api client")
+	errConfigMissingPort  = errors.New("invalid config: missing address port")
+	errLoggerMissing      = errors.New("invalid config: logger missing")
 )
 
 // Server interface
 type Server interface {
 	New(cnfg *Config) (*Server, error)
 	GetRandomDog(w http.ResponseWriter, r *http.Request)
+	GetRandomCat(w http.ResponseWriter, r *http.Request)
 }
 
 // AnimalAPIServer holds service client and server information
 type AnimalAPIServer struct {
 	DogAPIClient client.DogAPI
+	CatAPIClient client.CatAPI
 	Server       *http.Server
 	Logger       *logrus.Logger
 }
@@ -35,6 +38,7 @@ type AnimalAPIServer struct {
 // Config holds service config information
 type Config struct {
 	DogAPIClient client.DogAPI
+	CatAPIClient client.CatAPI
 	Addr         string
 	Logger       *logrus.Logger
 }
@@ -42,7 +46,10 @@ type Config struct {
 // New returns a new service
 func New(cnfg *Config) (*AnimalAPIServer, error) {
 	if cnfg.DogAPIClient == nil {
-		return &AnimalAPIServer{}, errConfigNilClient
+		return &AnimalAPIServer{}, errConfigNilDogClient
+	}
+	if cnfg.CatAPIClient == nil {
+		return &AnimalAPIServer{}, errConfigNilCatClient
 	}
 
 	if cnfg.Addr == "" {
@@ -55,6 +62,7 @@ func New(cnfg *Config) (*AnimalAPIServer, error) {
 
 	return &AnimalAPIServer{
 		DogAPIClient: cnfg.DogAPIClient,
+		CatAPIClient: cnfg.CatAPIClient,
 		Server:       &http.Server{Addr: cnfg.Addr},
 		Logger:       cnfg.Logger,
 	}, nil
@@ -82,6 +90,7 @@ func (s *AnimalAPIServer) registerRoutes() {
 	r.Get("/", s.GetHealth)
 	r.Get("/health", s.GetHealth)
 	r.Get("/api/v1/dogs/random", s.GetRandomDog)
+	r.Get("/api/v1/cats/random", s.GetRandomCat)
 
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
 		s.Logger.Infof("route -> %s %s\n", method, route)

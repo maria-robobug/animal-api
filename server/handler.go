@@ -7,7 +7,7 @@ import (
 )
 
 // Response contains the http response body data
-type Response struct {
+type DogResponse struct {
 	Image       Image  `json:"image"`
 	Name        string `json:"name"`
 	Height      string `json:"height"`
@@ -15,6 +15,15 @@ type Response struct {
 	Lifespan    string `json:"lifespan"`
 	Temperament string `json:"temperament"`
 	BreedGroup  string `json:"breed_group"`
+}
+
+type CatResponse struct {
+	Image       Image  `json:"image"`
+	Name        string `json:"name"`
+	Weight      string `json:"weight"`
+	Lifespan    string `json:"lifespan"`
+	Temperament string `json:"temperament"`
+	Description string `json:"description"`
 }
 
 // Image holds Image information for a Dog
@@ -49,7 +58,7 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 
 	dog := dogInfo[0].Breeds[0]
 
-	resp := &Response{
+	resp := &DogResponse{
 		Image:       dogImage,
 		Name:        dog.Name,
 		Height:      dog.Height.Metric + " cm",
@@ -57,6 +66,36 @@ func (s *AnimalAPIServer) GetRandomDog(w http.ResponseWriter, r *http.Request) {
 		Lifespan:    dog.LifeSpan,
 		Temperament: dog.Temperament,
 		BreedGroup:  dog.BreedGroup,
+	}
+
+	render.JSON(w, r, resp)
+}
+
+// GetRandomCat returns random cat data from the CatAPI
+func (s *AnimalAPIServer) GetRandomCat(w http.ResponseWriter, r *http.Request) {
+	catInfo, err := s.CatAPIClient.GetRandomCatInfo()
+	if err != nil {
+		s.Logger.Errorf("%s", err.Error())
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	catImage := Image{
+		URL:    catInfo[0].URL,
+		Width:  catInfo[0].Width,
+		Height: catInfo[0].Height,
+	}
+
+	cat := catInfo[0].Breeds[0]
+
+	resp := &CatResponse{
+		Image:       catImage,
+		Name:        cat.Name,
+		Weight:      cat.Weight.Metric + " kgs",
+		Lifespan:    cat.Lifespan + " years",
+		Temperament: cat.Temperament,
+		Description: cat.Description,
 	}
 
 	render.JSON(w, r, resp)

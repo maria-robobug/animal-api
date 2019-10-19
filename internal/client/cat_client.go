@@ -5,61 +5,60 @@ import (
 	"net/http"
 )
 
-type DogAPI interface {
-	GetRandomDogInfo() ([]DogInfo, error)
+type CatAPI interface {
+	GetRandomCatInfo() ([]CatInfo, error)
 }
 
-type DogAPIClient struct {
+type CatAPIClient struct {
 	BaseURL string
 	APIKey  string
 	Client  *http.Client
 }
 
-type DogInfo struct {
-	Breeds []DogBreed `json:"breeds"`
+type CatInfo struct {
+	Breeds []CatBreed `json:"breeds"`
 	URL    string     `json:"url"`
 	Width  int64      `json:"width"`
 	Height int64      `json:"height"`
 }
 
-type DogBreed struct {
+type CatBreed struct {
 	Name        string  `json:"name"`
-	Height      Measure `json:"height"`
 	Weight      Measure `json:"weight"`
-	BreedGroup  string  `json:"breed_group"`
-	LifeSpan    string  `json:"life_span"`
+	Lifespan    string  `json:"life_span"`
 	Temperament string  `json:"temperament"`
+	Description string  `json:"description"`
 }
 
-func NewDogAPI(baseURL, apiKey string, httpClient *http.Client) (*DogAPIClient, error) {
+func NewCatAPI(baseURL, apiKey string, httpClient *http.Client) (*CatAPIClient, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}
 
-	return &DogAPIClient{
+	return &CatAPIClient{
 		BaseURL: baseURL,
 		APIKey:  apiKey,
 		Client:  httpClient,
 	}, nil
 }
 
-func (c *DogAPIClient) GetRandomDogInfo() ([]DogInfo, error) {
+func (c *CatAPIClient) GetRandomCatInfo() ([]CatInfo, error) {
 	const endpoint = "/images/search?size=small&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1"
 
 	req, err := http.NewRequest("GET", c.BaseURL+endpoint, nil)
 	if err != nil {
-		return []DogInfo{}, err
+		return []CatInfo{}, err
 	}
 	req.Header.Add("x-api-key", c.APIKey)
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
-		return []DogInfo{}, err
+		return []CatInfo{}, err
 	}
 	defer resp.Body.Close()
 
-	dogInfo := []DogInfo{}
-	err = json.NewDecoder(resp.Body).Decode(&dogInfo)
+	catInfo := []CatInfo{}
+	err = json.NewDecoder(resp.Body).Decode(&catInfo)
 
-	return dogInfo, err
+	return catInfo, err
 }
