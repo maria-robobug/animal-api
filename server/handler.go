@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -89,15 +88,14 @@ func (s *AnimalAPIServer) GetRandomCat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cat := catInfo[0].Breeds[0]
-	fmt.Println(cat)
 
 	resp := &CatResponse{
-		Image:  catImage,
-		Name:   cat.Name,
-		Weight: cat.Weight.Metric + " kgs",
-		// Lifespan:    cat.Lifespan,
-		// Temperament: cat.Temperament,
-		// Description: cat.Description,
+		Image:       catImage,
+		Name:        cat.Name,
+		Weight:      cat.Weight.Metric + " kgs",
+		Lifespan:    cat.Lifespan + " years",
+		Temperament: cat.Temperament,
+		Description: cat.Description,
 	}
 
 	render.JSON(w, r, resp)

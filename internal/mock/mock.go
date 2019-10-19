@@ -83,7 +83,7 @@ var (
             }
         ],
         "id": "zK-7AFYVn",
-        "url": "https://cdn2.thecatapi.com/images/zK-7AFYVn.jpg",
+        "url": "https://somecdn.com/images/blah.jpg",
         "width": 1080,
         "height": 1080
     }

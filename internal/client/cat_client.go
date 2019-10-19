@@ -23,8 +23,11 @@ type CatInfo struct {
 }
 
 type CatBreed struct {
-	Name   string  `json:"name"`
-	Weight Measure `json:"weight"`
+	Name        string  `json:"name"`
+	Weight      Measure `json:"weight"`
+	Lifespan    string  `json:"life_span"`
+	Temperament string  `json:"temperament"`
+	Description string  `json:"description"`
 }
 
 func NewCatAPI(baseURL, apiKey string, httpClient *http.Client) (*CatAPIClient, error) {
