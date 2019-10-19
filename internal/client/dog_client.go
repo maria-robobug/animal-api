@@ -2,12 +2,7 @@ package client
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
-)
-
-var (
-	errInvalidClient = errors.New("invalid client: nil client provided")
 )
 
 type DogAPI interface {
@@ -21,13 +16,13 @@ type DogAPIClient struct {
 }
 
 type DogInfo struct {
-	Breeds []Breed `json:"breeds"`
-	URL    string  `json:"url"`
-	Width  int64   `json:"width"`
-	Height int64   `json:"height"`
+	Breeds []DogBreed `json:"breeds"`
+	URL    string     `json:"url"`
+	Width  int64      `json:"width"`
+	Height int64      `json:"height"`
 }
 
-type Breed struct {
+type DogBreed struct {
 	Name        string  `json:"name"`
 	Height      Measure `json:"height"`
 	Weight      Measure `json:"weight"`
@@ -36,11 +31,7 @@ type Breed struct {
 	Temperament string  `json:"temperament"`
 }
 
-type Measure struct {
-	Metric string `json:"metric"`
-}
-
-func New(baseURL, apiKey string, httpClient *http.Client) (*DogAPIClient, error) {
+func NewDogAPI(baseURL, apiKey string, httpClient *http.Client) (*DogAPIClient, error) {
 	if httpClient == nil {
 		return nil, errInvalidClient
 	}

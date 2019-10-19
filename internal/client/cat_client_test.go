@@ -8,16 +8,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewDogClient(t *testing.T) {
+func TestNewCatClient(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		_, err := client.NewDogAPI("", "", &http.Client{})
+		_, err := client.NewCatAPI("", "", &http.Client{})
 
 		assert.Nil(t, err)
 	})
 
 	t.Run("error", func(t *testing.T) {
 		invalidClientError := "invalid client: nil client provided"
-		_, err := client.NewDogAPI("", "", nil)
+		_, err := client.NewCatAPI("", "", nil)
 
 		assert.NotNil(t, err)
 		assert.Equal(t, err.Error(), invalidClientError)

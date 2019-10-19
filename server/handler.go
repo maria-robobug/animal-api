@@ -17,6 +17,8 @@ type Response struct {
 	BreedGroup  string `json:"breed_group"`
 }
 
+type 
+
 // Image holds Image information for a Dog
 type Image struct {
 	URL    string `json:"url"`
